@@ -24,6 +24,8 @@ public class SignupRequestDto {
     @Email
     private String email;
 
-    private String authority;
+    private String info;
+
+//    private String authority;
 }
 

@@ -30,6 +30,15 @@ public abstract class Timestamped {
     // 자바의 데이트 타입을 매핑할 때 사용합니다.-> Date, Calendar, TIMESTAMP type 이 있습니다.
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deletedAt;
+
+    // service 에서 탈퇴를 할 때 해당 메서드를 이용하여 값을 넣습니다.
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
 
 

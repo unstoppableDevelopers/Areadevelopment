@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,14 +36,16 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/sign-out")
-    public ResponseEntity<SingOutResponseDto> login(@RequestBody SignOutRequestDto requestDto) {
+    public ResponseEntity<User> signout(
+        @PathVariable(name = "userId") Long userId
+        , @RequestBody SignOutRequestDto requestDto)
+    {
         try{
-            User user = userService.signOut(requestDto);
-            String token = JwtTokenProvider.generateToken(user.getUsername());
-            AuthResponse authResponse = new AuthResponse("Successfully Log in", token);
-            return new ResponseEntity<>(authResponse, HttpStatus.OK);
+            User user = userService.signOut(userId, requestDto);
+            // token 검증
+            return ResponseEntity.ok().body(user);
         }catch (Exception e){
-            return new ResponseEntity<>(new AuthResponse("Invalid username or password", null), HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

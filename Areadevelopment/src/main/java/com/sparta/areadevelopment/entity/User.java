@@ -1,15 +1,22 @@
 package com.sparta.areadevelopment.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import java.sql.Time;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @String status : 탈퇴 여부를 저장 합니다. -> "Active", "Deleted"
  */
+
+@Entity
+@Getter
+@Setter
 public class User extends Timestamped {
 
     @Id
@@ -21,7 +28,7 @@ public class User extends Timestamped {
     private String nickname;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
     private String info;
     @Column(nullable = false)
