@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.entity;
 
+import com.sparta.areadevelopment.dto.UpdateUserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import java.sql.Time;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +24,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)
@@ -35,14 +37,25 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String status = "Active";
 
+    public User() {
+    }
+
     // 암호화 한 password를 넣자
-    public void setUserInfo(String username, String password, String nickname, String email,
+    @Builder
+    public User(String username, String nickname, String password, String email,
         String info) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.info = info;
+    }
+
+    public void updateProfile(UpdateUserDto user){
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
+        this.info = user.getInfo();
+        this.password = user.getPassword();
     }
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
