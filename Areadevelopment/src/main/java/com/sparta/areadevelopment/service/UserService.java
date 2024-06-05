@@ -2,12 +2,14 @@ package com.sparta.areadevelopment.service;
 
 import com.sparta.areadevelopment.dto.SignOutRequestDto;
 import com.sparta.areadevelopment.dto.SignupRequestDto;
+import com.sparta.areadevelopment.entity.Timestamped;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.UserRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +35,20 @@ public class UserService {
         }
     }
 
+    @Transactional
     public User signOut(Long userId, SignOutRequestDto requestDto) {
+        // userId를 통해서 user를 찾는다.
         User user = userRepository.findById(userId).orElseThrow(
             () -> new IllegalArgumentException("Failed to find comment with id," + userId)
         );
 
-        if(user == null
-            || !Objects.equals(user.getUsername(), requestDto.getUsername())
-            || !Objects.equals(user.getPassword(), requestDto.getPassword())
+        // 유효성 검사 부분
+        if( !Objects.equals(user.getUsername(), requestDto.getUsername())
+            && !Objects.equals(user.getPassword(), requestDto.getPassword())
         ){
             throw new IllegalArgumentException("Invalid username or password.");
         }else{
             user.softDelete(); // 동시 처리
-            userRepository.delete(user);
         }
 
         return user;

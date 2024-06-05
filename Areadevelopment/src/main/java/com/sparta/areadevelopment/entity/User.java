@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import java.sql.Time;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,5 +48,6 @@ public class User extends Timestamped {
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
         this.status = "Deleted";
+        this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
 }

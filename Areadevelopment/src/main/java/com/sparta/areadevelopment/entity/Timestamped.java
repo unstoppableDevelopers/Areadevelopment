@@ -36,8 +36,8 @@ public abstract class Timestamped {
     private LocalDateTime deletedAt;
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용하여 값을 넣습니다.
-    public void softDelete() {
-        this.deletedAt = LocalDateTime.now();
+    protected void setDeletedAt(LocalDateTime now) {
+        this.deletedAt = now;
     }
 }
 
