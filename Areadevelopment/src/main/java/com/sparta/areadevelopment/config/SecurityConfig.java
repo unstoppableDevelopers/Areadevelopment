@@ -1,6 +1,6 @@
 package com.sparta.areadevelopment.config;
 
-import com.sparta.areadevelopment.filter.JwtFilter;
+import com.sparta.areadevelopment.filter.JwtAuthenticationFilter;
 import com.sparta.areadevelopment.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,13 +38,11 @@ public class SecurityConfig {
         //경로 별 인가
         http
                 .authorizeHttpRequests((auth) ->auth
-                                .requestMatchers("/login","/**","/join","/api").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/user/**").hasRole("USER")
+                                .requestMatchers("/auth/reissue","/**","/auth/login").permitAll()
                                 .anyRequest().authenticated()
                         );
         http
-                .addFilterAt(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         //세션 jwt를 통해 인증 인가를 위해 stateless 상태 설정
         http

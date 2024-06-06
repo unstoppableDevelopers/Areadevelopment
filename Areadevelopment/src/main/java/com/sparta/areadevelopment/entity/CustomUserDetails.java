@@ -7,28 +7,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-public class CustomUserDetails implements UserDetails, Serializable {
-    private Long id;
-    private String username;
-    private String password;
+public class CustomUserDetails implements UserDetails {
+        private User user;
 //    private String email; 이메일
 //    private boolean emailVerified;   이메일 인증 여부
-    private String nickname;
-    private Collection<? extends GrantedAuthority> authorities;
+//    private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.nickname = user.getNickname();
+        this.user = user;
     }
 
-    /**
-     * 해당 유저의 권한 목록
-     */
+//    /**
+//     * 해당 유저의 권한 목록
+//     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return null;
     }
 
     /**
@@ -36,7 +30,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
      */
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
 
@@ -45,7 +39,7 @@ public class CustomUserDetails implements UserDetails, Serializable {
      */
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
     /**
