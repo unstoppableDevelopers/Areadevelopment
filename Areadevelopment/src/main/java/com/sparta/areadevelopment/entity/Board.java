@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.entity;
 
+
 import com.sparta.areadevelopment.dto.BoardRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,13 +26,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 public class Board {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @OneToOne
-//    @JoinColumn(name = "user_id" , nullable = false)
-//    private User user;
 
     @Column(nullable = false)
     private String title;
@@ -76,5 +74,12 @@ public class Board {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.modifiedAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComments(Comment comment) {
+        comments.add(comment);
+
     }
 }

@@ -10,7 +10,7 @@
         <module name="Areadevelopment.Areadevelopment.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="17">
       <module name="Areadevelopment.Areadevelopment.main~1" target="17" />
       <module name="Areadevelopment.Areadevelopment.test~1" target="17" />
     </bytecodeTargetLevel>
