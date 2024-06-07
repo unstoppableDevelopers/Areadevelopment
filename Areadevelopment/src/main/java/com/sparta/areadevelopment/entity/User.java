@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.hibernate.validator.constraints.Length;
+
 /**
  * @String status : 탈퇴 여부를 저장 합니다. -> "Active", "Deleted"
  */
@@ -33,6 +35,7 @@ public class User extends Timestamped {
     private String email;
     private String info;
     @Column(nullable = false)
+
     private StatusEnum status = StatusEnum.ACTIVE;
 
     private String refreshToken;
