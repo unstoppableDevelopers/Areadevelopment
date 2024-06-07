@@ -60,6 +60,8 @@ public class Board {
 
     private Comment comment;
     public Board(BoardRequestDto requestDto , Comment comment ) {
+
+    public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.hits = 0L;
@@ -79,4 +81,13 @@ public class Board {
         this.content = requestDto.getContent();
         this.modifiedAt = LocalDateTime.now();
 }
+}
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComments(Comment comment) {
+        comments.add(comment);
+
+    }
 }

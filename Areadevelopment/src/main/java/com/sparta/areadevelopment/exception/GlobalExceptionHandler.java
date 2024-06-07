@@ -1,5 +1,9 @@
 package com.sparta.areadevelopment.exception;
 
+
+import jakarta.transaction.NotSupportedException;
+import javax.management.ServiceNotFoundException;
+
 import com.sparta.areadevelopment.dto.ErrorResponseDto;
 import jakarta.transaction.NotSupportedException;
 import java.util.Collections;
@@ -9,10 +13,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 
@@ -58,6 +65,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+
+    // 게시글 없으면 status 200 ok
+    @ExceptionHandler(ServiceNotFoundException.class)
+    public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
+        return ResponseEntity.ok().body(e.getMessage());
+    }
+}
+
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
     private String parseErrorMessage(String dbErrorMessage) {
         if (dbErrorMessage.contains("duplicate key value violates unique constraint")) {
@@ -79,4 +94,6 @@ public class GlobalExceptionHandler {
                 "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
                 HttpStatus.BAD_REQUEST);
     }
+
 }
+
