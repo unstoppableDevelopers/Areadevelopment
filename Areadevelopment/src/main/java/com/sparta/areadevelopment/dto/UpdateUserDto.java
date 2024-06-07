@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 public class UpdateUserDto {
+
     @NotBlank(message = "Required Nickname")
     private String nickname;
     @Email

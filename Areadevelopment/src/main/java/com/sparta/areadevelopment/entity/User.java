@@ -43,7 +43,7 @@ public class User extends Timestamped {
     // 암호화 한 password를 넣자
     @Builder
     public User(String username, String nickname, String password, String email,
-        String info) {
+            String info) {
         this.username = username;
         this.nickname = nickname;
         this.password = password;
@@ -51,7 +51,7 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-    public void updateProfile(UpdateUserDto user){
+    public void updateProfile(UpdateUserDto user) {
         this.nickname = user.getNickname();
         this.email = user.getEmail();
         this.info = user.getInfo();

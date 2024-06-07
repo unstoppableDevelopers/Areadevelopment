@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class UserInfoDto {
+
     private Long id;
     private String nickname;
     private String info;

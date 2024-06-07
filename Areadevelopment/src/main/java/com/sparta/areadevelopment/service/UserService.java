@@ -20,11 +20,11 @@ public class UserService {
 
     public void signUp(SignupRequestDto requestDto) throws Exception {
         User user = new User(
-            requestDto.getUsername(), // unique
-            requestDto.getNickname(), // unique
-            requestDto.getPassword(), // 여기서 암호화 한 부분을 넣습니다.
-            requestDto.getEmail(), // unique
-            requestDto.getInfo()
+                requestDto.getUsername(), // unique
+                requestDto.getNickname(), // unique
+                requestDto.getPassword(), // 여기서 암호화 한 부분을 넣습니다.
+                requestDto.getEmail(), // unique
+                requestDto.getInfo()
         );
 
         try {
@@ -44,7 +44,7 @@ public class UserService {
         }
 
         return new UserInfoDto(user.getId(), user.getNickname(),
-            user.getInfo(), user.getEmail());
+                user.getInfo(), user.getEmail());
     }
 
     @Transactional
@@ -62,13 +62,14 @@ public class UserService {
         }
     }
 
+    // 이 부분은 토큰이 필요한 부분이다.
     @Transactional
     public User signOut(Long userId, SignOutRequestDto requestDto) {
         User user = checkUser(userId);
 
         // 유효성 검사 부분
         if (!Objects.equals(user.getUsername(), requestDto.getUsername())
-            && !Objects.equals(user.getPassword(), requestDto.getPassword())
+                && !Objects.equals(user.getPassword(), requestDto.getPassword())
         ) {
             throw new IllegalArgumentException("Invalid username or password.");
         } else {
@@ -81,7 +82,7 @@ public class UserService {
     private User checkUser(Long userId) {
         // userId를 통해서 user를 찾는다.
         User user = userRepository.findById(userId).orElseThrow(
-            () -> new IllegalArgumentException("Failed to find comment with id," + userId)
+                () -> new IllegalArgumentException("Failed to find comment with id," + userId)
         );
         return user;
     }
