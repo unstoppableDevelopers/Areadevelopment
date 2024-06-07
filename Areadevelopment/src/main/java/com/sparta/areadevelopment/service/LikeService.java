@@ -54,7 +54,8 @@ public class LikeService {
 
         LikeTypeEnum likeType = LikeTypeEnum.fromContentType(contentType);
 
-        Optional<Like> checkLike = likeRepository.findByUserIdAndTypeIdAndType(userId, contentId,
+        Optional<Like> checkLike = likeRepository.findByUserIdAndContentIdAndContentType(userId,
+                contentId,
                 likeType);
 
         if (checkLike.isPresent()) {
@@ -104,9 +105,9 @@ public class LikeService {
         if (content.isPresent()) {
             Object innerContent = content.get();
             if (innerContent instanceof Board) {
-                likedUserId = ((Board) innerContent).getUser.getId;
+                likedUserId = ((Board) innerContent).getUser().getId();
             } else if (innerContent instanceof Comment) {
-                likedUserId = ((Comment) innerContent).getUser.getId;
+                likedUserId = ((Comment) innerContent).getUser().getId();
             }
         }
 
