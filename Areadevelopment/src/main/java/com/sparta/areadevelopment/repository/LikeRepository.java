@@ -18,7 +18,8 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
      * @param type    PathVariable 로 받은 컨텐츠 타입을 enum 으로 변환한 객체
      * @return 해당 정보가 존재한다면 Like Entity 를 반환하고, 존재하지 않다면 Null 을 반환합니다.
      */
-    Optional<Like> findByUserIdAndTypeIdAndType(Long user_id, Long typeId, LikeTypeEnum type);
+    Optional<Like> findByUserIdAndContentIdAndContentType(Long user_id, Long typeId,
+            LikeTypeEnum type);
 
 
 }

@@ -7,20 +7,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-
-
-
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import org.hibernate.validator.constraints.Length;
 
 /**
  * @String status : 탈퇴 여부를 저장 합니다. -> "Active", "Deleted"
@@ -29,6 +23,7 @@ import org.hibernate.validator.constraints.Length;
 @Entity
 @Getter
 @Setter
+@Table(name = "users")
 public class User extends Timestamped {
 
     @Id
@@ -42,7 +37,7 @@ public class User extends Timestamped {
     public void addComments(Comment comment) {
         comments.add(comment);
     }
-  
+
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)

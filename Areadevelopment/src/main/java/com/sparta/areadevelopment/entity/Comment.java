@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "comments")
 public class Comment extends Timestamped {
 
     @Id
@@ -42,7 +45,6 @@ public class Comment extends Timestamped {
         this.likeCount = 0L;
         this.board = board;
         this.user = user;
-        board.addComments(this);
         user.addComments(this);
     }
 
@@ -51,6 +53,6 @@ public class Comment extends Timestamped {
     }
 
     public void delete() {
-        setDeletedAt();
+        setDeletedAt(LocalDateTime.now());
     }
 }
