@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.exception;
 
 import com.sparta.areadevelopment.dto.ErrorResponseDto;
+import jakarta.transaction.NotSupportedException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
