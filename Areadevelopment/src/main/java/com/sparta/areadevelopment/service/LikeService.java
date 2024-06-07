@@ -89,6 +89,7 @@ public class LikeService {
     private void validateContentUser(Long userId, String contentType, Long contentId) {
         Optional<?> content;
 
+        // 객체를 가져옵니다
         if (LikeTypeEnum.BOARD.equalsType(contentType)) {
             content = boardRepository.findById(contentId);
         } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) {
@@ -99,12 +100,13 @@ public class LikeService {
 
         Long likedUserId = null;
 
+        // 객체가 있을경우
         if (content.isPresent()) {
             Object innerContent = content.get();
             if (innerContent instanceof Board) {
-                likedUserId = ((Board) innerContent).getId();
+                likedUserId = ((Board) innerContent).getUser.getId;
             } else if (innerContent instanceof Comment) {
-                likedUserId = ((Comment) innerContent).getId();
+                likedUserId = ((Comment) innerContent).getUser.getId;
             }
         }
 

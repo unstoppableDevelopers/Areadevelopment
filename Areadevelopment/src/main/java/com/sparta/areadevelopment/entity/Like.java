@@ -35,14 +35,14 @@ public class Like {
      * 좋아요를 누른 컨텐츠 타입의 고유번호.
      */
     @Column(nullable = false)
-    private Long typeId;
+    private Long contentId;
 
     /**
      * 좋아요를 누른 컨텐츠 타입.
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private LikeTypeEnum type;
+    private LikeTypeEnum contentType;
 
     /**
      * 좋아요를 누를 시간.
@@ -60,14 +60,14 @@ public class Like {
     /**
      * Like Entity 의 생성자 입니다.
      *
-     * @param user   사용자 객체
-     * @param typeId 컨텐츠 타입 고유번호
-     * @param type   컨텐츠 타입
+     * @param user        사용자 객체
+     * @param contentId   컨텐츠 타입 고유번호
+     * @param contentType 컨텐츠 타입
      */
-    public Like(User user, Long typeId, LikeTypeEnum type) {
+    public Like(User user, Long contentId, LikeTypeEnum contentType) {
         this.user = user;
-        this.typeId = typeId;
-        this.type = type;
+        this.contentId = contentId;
+        this.contentType = contentType;
         this.createdAt = LocalDateTime.now();
     }
 }

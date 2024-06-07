@@ -4,15 +4,14 @@ package com.sparta.areadevelopment.entity;
  * 좋아요 기능 적용 타입 관리 클래스.
  */
 public enum LikeTypeEnum {
-    BOARD(ContentType.BOARD),
-    COMMENT(ContentType.COMMENT);
+    BOARD("board"),
+    COMMENT("comment");
 
     private final String contentType;
 
     LikeTypeEnum(String contentType) {
         this.contentType = contentType;
     }
-
 
     /**
      * 주어진 문자열이 이 열거형 인스턴스의 contentType 과 일치하는지 확인합니다.
@@ -31,11 +30,5 @@ public enum LikeTypeEnum {
             }
         }
         throw new IllegalArgumentException("지원하지 않는 타입입니다.");
-    }
-
-    public static class ContentType {
-
-        public static final String BOARD = "board";
-        public static final String COMMENT = "comment";
     }
 }

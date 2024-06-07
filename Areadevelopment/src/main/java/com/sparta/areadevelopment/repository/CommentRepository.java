@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.repository;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.sparta.areadevelopment.entity.Comment;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,5 +26,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("UPDATE Comment c SET c.likeCount = c.likeCount - 1 WHERE c.id = :commentId")
     void decrementLikeCount(@Param("commentId") Long commentId);
-
 }
