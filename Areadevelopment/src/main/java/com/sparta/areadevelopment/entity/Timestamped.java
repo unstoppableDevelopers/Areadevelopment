@@ -14,23 +14,31 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+
+
 public abstract class Timestamped {
 
+    // 해당 추상 클래스를 상속받는 클래스에서는 모두 creatAt, modifiedAt
+    // 컬럼이 생성됩니다.
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    // 해당 updatable option은 생성 초기에만 시간을 저장하고 변경이 되었을 때 시간을 바꾸지 않기 위해서 입니다.
+    @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
+    // 마지막 변경 시간을 저장합니다.
     @LastModifiedDate
-    @Column(name = "modified_at", nullable = false)
+    @Column
+    // 자바의 데이트 타입을 매핑할 때 사용합니다.-> Date, Calendar, TIMESTAMP type 이 있습니다.
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 
-    @Column(name = "deleted_at")
+    @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime deletedAt;
 
-    public void setDeletedAt() {
-        this.deletedAt = LocalDateTime.now();
+    // service 에서 탈퇴를 할 때 해당 메서드를 이용하여 값을 넣습니다.
+    protected void setDeletedAt(LocalDateTime now) {
+        this.deletedAt = now;
     }
 }
