@@ -36,7 +36,8 @@ public class LikeController {
      * @return 상태코드 200과 새로운 좋아요가 추가되면 true, 기존 좋아요가 제거되면 false
      */
     @PostMapping
-    public ResponseEntity<String> likeContent(@AuthenticationPrincipal CustomUserDetails userDetails,
+    public ResponseEntity<String> likeContent(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody LikeDto likeDto) {
         boolean isLiked = likeService.toggleLike(userDetails.getUser().getId(),
                 likeDto.getContentType().toLowerCase(), likeDto.getContentId());
@@ -48,23 +49,3 @@ public class LikeController {
     }
 }
 
-///**
-// * 유저디테일즈 없는 테스트용 코드입니다.
-// *
-// * @param userDetails 시큐리티 인증을 통과한 유저의 정보
-// * @param contentType 좋아요가 적용 될 타입
-// * @param contentId   좋아요가 적용 될 타입의 고유번호
-// * @return 상태코드 200과 새로운 좋아요가 추가되면 true, 기존 좋아요가 제거되면 false
-// */
-//    @PostMapping
-//    public ResponseEntity<String> likeContent(@RequestBody TestDto testDto,
-//            @RequestBody LikeDto likeDto) {
-//        boolean isLiked = likeService.toggleLike(testDto.getUserId(),
-//                likeDto.getContentType().toLowerCase(), likeDto.getContentId());
-//        if (isLiked) {
-//            return ResponseEntity.ok("좋아요 등록 성공");
-//        } else {
-//            return ResponseEntity.ok("좋아요 취소 성공");
-//        }
-//    }
-//}

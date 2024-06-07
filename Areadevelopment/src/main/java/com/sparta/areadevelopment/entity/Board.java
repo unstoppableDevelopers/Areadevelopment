@@ -8,6 +8,8 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -24,7 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Getter
 @Setter
-@Table(name = "Board")
+@Table(name = "boards")
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Board {
@@ -58,8 +60,12 @@ public class Board {
     @Column
     private LocalDateTime deletedAt;
 
-    private Comment comment;
-    public Board(BoardRequestDto requestDto , Comment comment ) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "board")
+    private List<Comment> comments = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
@@ -83,11 +89,5 @@ public class Board {
 }
 }
 
-    @OneToMany(mappedBy = "board")
-    private List<Comment> comments = new ArrayList<>();
+    
 
-    public void addComments(Comment comment) {
-        comments.add(comment);
-
-    }
-}

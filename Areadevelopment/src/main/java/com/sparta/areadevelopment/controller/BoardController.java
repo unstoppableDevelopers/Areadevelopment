@@ -34,11 +34,6 @@ public class BoardController {
         return boardService.findAll();
     }
 
-//    @GetMapping("/boards")
-//    public void Page() {
-//
-//    }
-
     @GetMapping("/boards/{boardId}")
     public BoardResponseDto findById(@PathVariable Long boardId) {
         return boardService.findById(boardId);
@@ -52,7 +47,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/boards/{boardId}")
-    public BoardResponseDto delete(@PathVariable Long boardId){
+    public BoardResponseDto delete(@PathVariable Long boardId) {
         return boardService.delete(boardId);
     }
 }

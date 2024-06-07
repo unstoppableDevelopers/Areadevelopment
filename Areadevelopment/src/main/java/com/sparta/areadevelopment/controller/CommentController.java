@@ -3,8 +3,6 @@ package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
-import com.sparta.areadevelopment.entity.Board;
-import com.sparta.areadevelopment.entity.Comment;
 import com.sparta.areadevelopment.service.CommentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
