@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+
     public void signUp(SignupRequestDto requestDto) {
 
         // unique 값이 들어가면 발생하는 excpetion인데 이것은 어떤 것을 상속을 받은 것이다.
@@ -30,7 +31,8 @@ public class UserService {
         // 명확한 구분을 통해서 빠르게 분류하고 검사할 수 있다. 단, save 속도 저하 야기 가능
 
         // 중복 검증 로직을 한 번의 메소드 호출로 처리
-        checkForDuplicate(requestDto.getUsername(), requestDto.getNickname(), requestDto.getEmail());
+        checkForDuplicate(requestDto.getUsername(), requestDto.getNickname(),
+                requestDto.getEmail());
 
         User user = new User(
                 requestDto.getUsername(),
@@ -46,7 +48,8 @@ public class UserService {
 
     private void checkForDuplicate(String username, String nickname, String email) {
         // 하나의 쿼리로 중복 여부 확인
-        Optional<User> existingUser = userRepository.findByUsernameOrNicknameOrEmail(username, nickname, email);
+        Optional<User> existingUser = userRepository.findByUsernameOrNicknameOrEmail(username,
+                nickname, email);
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             if (username.equals(user.getUsername())) {
