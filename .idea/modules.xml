@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Areadevelopment.iml" filepath="$PROJECT_DIR$/.idea/Areadevelopment.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.sparta.Areadevelopment.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.sparta.Areadevelopment.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Areadevelopment.iml" filepath="$PROJECT_DIR$/.idea/Areadevelopment.iml" /><<<<<<< 2-usercrud
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Areadevelopment.Areadevelopment.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Areadevelopment.Areadevelopment.main.iml" />
     </modules>
   </component>
 </project>
