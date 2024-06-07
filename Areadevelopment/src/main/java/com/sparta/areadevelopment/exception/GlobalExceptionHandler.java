@@ -4,7 +4,6 @@ import com.sparta.areadevelopment.dto.ErrorResponseDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,7 +43,9 @@ public class GlobalExceptionHandler {
     // 잘못된 URL 입력에 의한 처리
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex) {
-        return new ResponseEntity<>("The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(
+                "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
+                HttpStatus.BAD_REQUEST);
     }
 
 }
