@@ -5,11 +5,17 @@ import com.sparta.areadevelopment.dto.SignupRequestDto;
 import com.sparta.areadevelopment.dto.UpdateUserDto;
 import com.sparta.areadevelopment.dto.UserInfoDto;
 import com.sparta.areadevelopment.entity.User;
+import com.sparta.areadevelopment.exception.FieldValidationException;
 import com.sparta.areadevelopment.repository.UserRepository;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,17 +56,25 @@ public class UserService {
         // 하나의 쿼리로 중복 여부 확인
         Optional<User> existingUser = userRepository.findByUsernameOrNicknameOrEmail(username,
                 nickname, email);
+
+        Map<String, String> errors = new HashMap<>();
+
         if (existingUser.isPresent()) {
             User user = existingUser.get();
             if (username.equals(user.getUsername())) {
-                throw new DuplicateKeyException("Username already exists: " + username);
+                errors.put("username", "Username already exists.");
             }
             if (nickname.equals(user.getNickname())) {
-                throw new DuplicateKeyException("Nickname already exists: " + nickname);
+                errors.put("nickname", "Nickname already exists.");
             }
             if (email.equals(user.getEmail())) {
-                throw new DuplicateKeyException("Email already exists: " + email);
+                errors.put("email", "Email already exists.");
             }
+        }
+
+        // 오류가 있을 경우 예외 발생
+        if (!errors.isEmpty()) {
+            throw new FieldValidationException(errors);
         }
     }
 
@@ -75,6 +89,21 @@ public class UserService {
 
         return new UserInfoDto(user.getId(), user.getNickname(),
                 user.getInfo(), user.getEmail());
+    }
+
+    public List<UserInfoDto> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private UserInfoDto convertToDto(User user) {
+        return new UserInfoDto(
+                user.getId(),
+                user.getNickname(),
+                user.getEmail(),
+                user.getInfo()
+        );
     }
 
     @Transactional

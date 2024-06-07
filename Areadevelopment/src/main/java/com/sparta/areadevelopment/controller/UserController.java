@@ -8,6 +8,7 @@ import com.sparta.areadevelopment.dto.UserInfoDto;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.service.UserService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<SignupResponseDto> register(
-            @RequestBody @Valid SignupRequestDto requestDto) throws Exception {
+            @RequestBody @Valid SignupRequestDto requestDto){
         userService.signUp(requestDto);
         SignupResponseDto signupResponseDto = new SignupResponseDto("Successfully Signed Up");
         return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
@@ -41,6 +42,12 @@ public class UserController {
             @PathVariable("userId") Long userId,
             @RequestBody SignupRequestDto requestDto) {
         return new ResponseEntity<>(userService.getUser(userId, requestDto.getPassword()),
+                HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(),
                 HttpStatus.OK);
     }
 
