@@ -1,10 +1,10 @@
 package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.LikeDto;
-import com.sparta.areadevelopment.dto.TestDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.LikeService;
-import com.sparta.areadevelopment.sicurity.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ public class LikeController {
      * @return 상태코드 200과 새로운 좋아요가 추가되면 true, 기존 좋아요가 제거되면 false
      */
     @PostMapping
-    public ResponseEntity<String> likeContent(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<String> likeContent(@AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody LikeDto likeDto) {
         boolean isLiked = likeService.toggleLike(userDetails.getUser().getId(),
                 likeDto.getContentType().toLowerCase(), likeDto.getContentId());

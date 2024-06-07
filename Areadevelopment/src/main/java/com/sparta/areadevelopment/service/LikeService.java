@@ -106,7 +106,7 @@ public class LikeService {
             if (innerContent instanceof Board) {
                 likedUserId = ((Board) innerContent).getUser.getId;
             } else if (innerContent instanceof Comment) {
-                likedUserId = ((Comment) innerContent).getUser.getId;
+                likedUserId = ((Comment) innerContent).getUser().getId();
             }
         }
 
