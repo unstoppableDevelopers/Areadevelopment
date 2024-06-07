@@ -1,6 +1,5 @@
 package com.sparta.areadevelopment.repository;
 
-
 import com.sparta.areadevelopment.entity.User;
 import java.util.List;
 import java.util.Optional;

@@ -45,10 +45,11 @@ dependencies {
     implementation 'org.json:json:20230227'
 
     // lombok
+    
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
 
     // mysql 공통 의존성
     runtimeOnly 'com.mysql:mysql-connector-j'
