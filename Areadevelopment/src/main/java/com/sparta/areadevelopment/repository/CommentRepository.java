@@ -3,9 +3,10 @@ package com.sparta.areadevelopment.repository;
 
 import com.sparta.areadevelopment.entity.Comment;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByDeletedAtNull();
+    Optional<List<Comment>> findByDeletedAtNullOrderByCreatedAtDesc();
 }

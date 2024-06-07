@@ -4,9 +4,9 @@ package com.sparta.areadevelopment.controller;
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
 import com.sparta.areadevelopment.service.CommentService;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,26 +27,32 @@ public class CommentController {
     }
 
     @PostMapping("/{boardId}/comments")
-    public CommentResponseDto addComment(@AuthenticationPrincipal String username,
+    public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId, @RequestBody CommentRequestDto requestDto) {
-        return commentService.addComment(username, boardId, requestDto);
+        return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
     }
 
     @GetMapping("/comments")
-    public List<CommentResponseDto> getAllComments() {
-        return commentService.getAllComments();
+    public ResponseEntity<?> getAllComments() {
+        if (commentService.getAllComments().isEmpty()) {
+            return ResponseEntity.ok("먼저 작성하여 댓글을 남겨보세요!");
+        } else {
+            return ResponseEntity.ok(commentService.getAllComments());
+        }
     }
 
     @PutMapping("/{boardId}/comments/{commentId}")
-    public CommentResponseDto updateComment(@AuthenticationPrincipal String username,
+    public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId, @PathVariable Long commentId,
             @RequestBody CommentRequestDto requestDto) {
-        return commentService.updateComment(username, boardId, commentId, requestDto);
+        return commentService.updateComment(userDetails.getUsername(), boardId, commentId,
+                requestDto);
     }
 
     @DeleteMapping("/{boardId}/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@AuthenticationPrincipal String username,
+    public ResponseEntity<String> deleteComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId, @PathVariable Long commentId) {
-        return ResponseEntity.ok(commentService.deleteComment(username, boardId, commentId));
+        return ResponseEntity.ok(
+                commentService.deleteComment(userDetails.getUsername(), boardId, commentId));
     }
 }

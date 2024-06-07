@@ -8,7 +8,9 @@ import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
 import com.sparta.areadevelopment.repository.CommentRepository;
 import com.sparta.areadevelopment.repository.UserRepository;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +33,8 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> getAllComments() {
-        return commentRepository.findByDeletedAtNull().stream().map(CommentResponseDto::new)
-                .toList();
+        return commentRepository.findByDeletedAtNullOrderByCreatedAtDesc().map(Collection::stream)
+                .orElseGet(Stream::empty).map(CommentResponseDto::new).toList();
     }
 
     @Transactional
