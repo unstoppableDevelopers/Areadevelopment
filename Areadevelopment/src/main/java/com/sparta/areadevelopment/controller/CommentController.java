@@ -3,7 +3,10 @@ package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
+import com.sparta.areadevelopment.entity.Board;
+import com.sparta.areadevelopment.entity.Comment;
 import com.sparta.areadevelopment.service.CommentService;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,12 +35,13 @@ public class CommentController {
         return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
     }
 
-    @GetMapping("/comments")
-    public ResponseEntity<?> getAllComments() {
-        if (commentService.getAllComments().isEmpty()) {
+    @GetMapping("/{boardId}/comments")
+    public ResponseEntity<?> getAllComments(@PathVariable Long boardId) {
+        List<CommentResponseDto> comments = commentService.getAllComments(boardId);
+        if (comments.isEmpty()) {
             return ResponseEntity.ok("먼저 작성하여 댓글을 남겨보세요!");
         } else {
-            return ResponseEntity.ok(commentService.getAllComments());
+            return ResponseEntity.ok(comments);
         }
     }
 

@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,6 +42,8 @@ public class Comment extends Timestamped {
         this.likeCount = 0L;
         this.board = board;
         this.user = user;
+        board.addComments(this);
+        user.addComments(this);
     }
 
     public void update(CommentRequestDto dto) {

@@ -32,8 +32,9 @@ public class CommentService {
         return new CommentResponseDto(comment);
     }
 
-    public List<CommentResponseDto> getAllComments() {
-        return commentRepository.findByDeletedAtNullOrderByCreatedAtDesc().map(Collection::stream)
+    public List<CommentResponseDto> getAllComments(Long boardId) {
+        return commentRepository.findByDeletedAtNullAndBoardIdOrderByCreatedAtDesc(boardId)
+                .map(Collection::stream)
                 .orElseGet(Stream::empty).map(CommentResponseDto::new).toList();
     }
 
@@ -42,10 +43,10 @@ public class CommentService {
             CommentRequestDto requestDto) {
         Board board = findBoardById(boardId);
         Comment comment = findCommentById(commentId);
-        checkBoardDeleted(board);
-        checkCommentDeleted(comment);
-        checkCommentIsInBoard(comment, board);
-        checkCommentAuthor(comment, username);
+        checkBoardDeleted(board); //게시판이 삭제되었는지 검사
+        checkCommentDeleted(comment); //댓글이 삭제되었는지 검사
+        checkCommentIsInBoard(comment, board); //게시판 안에 댓글이 있는지 검사
+        checkCommentAuthor(comment, username); //해당 사용자가 댓글을 작성하였는지 검사
         comment.update(requestDto);
         return new CommentResponseDto(comment);
     }
@@ -54,10 +55,10 @@ public class CommentService {
     public String deleteComment(String username, Long boardId, Long commentId) {
         Board board = findBoardById(boardId);
         Comment comment = findCommentById(commentId);
-        checkBoardDeleted(board);
-        checkCommentDeleted(comment);
-        checkCommentIsInBoard(comment, board);
-        checkCommentAuthor(comment, username);
+        checkBoardDeleted(board); //게시판이 삭제되었는지 검사
+        checkCommentDeleted(comment); //댓글이 삭제되었는지 검사
+        checkCommentIsInBoard(comment, board); //게시판 안에 댓글이 있는지 검사
+        checkCommentAuthor(comment, username); //해당 사용자가 댓글을 작성하였는지 검사
         comment.delete();
         return "댓글 삭제 성공";
     }
@@ -97,7 +98,7 @@ public class CommentService {
 
     public void checkCommentAuthor(Comment comment, String username) {
         if (!comment.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
+            throw new IllegalArgumentException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
         }
     }
 }

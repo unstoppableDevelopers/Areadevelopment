@@ -24,4 +24,8 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<Comment>();
+
+    public void addComments(Comment comment) {
+        comments.add(comment);
+    }
 }

@@ -21,4 +21,7 @@ public class Board extends Timestamped {
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
+    public void addComments(Comment comment) {
+        comments.add(comment);
+    }
 }
