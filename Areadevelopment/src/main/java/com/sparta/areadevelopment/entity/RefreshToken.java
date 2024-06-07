@@ -28,4 +28,8 @@ public class RefreshToken {
         this.value = token;
         return this;
     }
+
+    public boolean getStatus() {
+        return Boolean.parseBoolean(value);
+    }
 }

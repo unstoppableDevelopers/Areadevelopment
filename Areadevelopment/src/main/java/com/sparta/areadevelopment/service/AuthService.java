@@ -43,7 +43,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
 
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDto tokenDto = tokenProvider.generateToken(authentication);
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .key(authentication.getName())
@@ -56,33 +56,24 @@ public class AuthService {
     }
 
     @Transactional
-    public Object reissue(String refreshToken) {
-        // 1. Refresh Token 검증
-        if (!tokenProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+    // Access Token 리프레시
+    public TokenDto reissue(String refreshToken , String accessToken) {
+        if (refreshTokenRepository.findByValue(refreshToken).equals(refreshToken)) {
+            tokenProvider.validateToken(accessToken);
         }
-
-        // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(refreshToken);
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
         RefreshToken originRefreshToken = refreshTokenRepository.findByKey(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-
-        // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.equals(originRefreshToken.getValue())) {
+        if (!originRefreshToken.getValue().equals(refreshToken)) {
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
-
-        // 5. 새로운 토큰 생성
-        TokenDto newTokenDto = tokenProvider.generateTokenDto(authentication);
-
-        // 6. 저장소 정보 업데이트
-        RefreshToken newRefreshToken = originRefreshToken.updateValue(
-                newTokenDto.getRefreshToken());
+        TokenDto tokenDto = tokenProvider.generateToken(authentication);
+        RefreshToken newRefreshToken = originRefreshToken.updateValue(tokenDto.getRefreshToken());
         refreshTokenRepository.save(newRefreshToken);
 
-        // 토큰 발급
-        return newTokenDto;
+        return tokenDto;
     }
 }
+
