@@ -33,7 +33,7 @@ public class User extends Timestamped {
     private String email;
     private String info;
     @Column(nullable = false)
-    private String status = "Active";
+    private StatusEnum status = StatusEnum.ACTIVE;
 
     private String refreshToken;
 
@@ -60,7 +60,7 @@ public class User extends Timestamped {
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
-        this.status = "Deleted";
+        this.status = StatusEnum.DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
 }
