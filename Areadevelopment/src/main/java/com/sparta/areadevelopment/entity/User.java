@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.entity;
 
+import com.sparta.areadevelopment.dto.UpdateUserDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -33,7 +35,10 @@ public class User extends Timestamped {
     private String email;
     private String info;
     @Column(nullable = false)
-    private String status = "Active";
+
+    private StatusEnum status = StatusEnum.ACTIVE;
+
+    private String refreshToken;
 
     public User() {
     }
@@ -49,17 +54,16 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-
-//    public void updateProfile(UpdateUserDto user){
-//        this.nickname = user.getNickname();
-//        this.email = user.getEmail();
-//        this.info = user.getInfo();
-//        this.password = user.getPassword();
-//    }
+    public void updateProfile(UpdateUserDto user) {
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
+        this.info = user.getInfo();
+        this.password = user.getPassword();
+    }
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
-        this.status = "Deleted";
+        this.status = StatusEnum.DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
 }

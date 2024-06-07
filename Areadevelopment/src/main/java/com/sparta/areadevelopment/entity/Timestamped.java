@@ -14,7 +14,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class Timestamped{
+
+public abstract class Timestamped {
 
     // 해당 추상 클래스를 상속받는 클래스에서는 모두 creatAt, modifiedAt
     // 컬럼이 생성됩니다.
