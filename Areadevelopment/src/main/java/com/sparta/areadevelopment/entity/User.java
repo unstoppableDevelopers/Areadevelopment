@@ -37,6 +37,8 @@ public class User extends Timestamped {
     @Column(nullable = false)
     private String status = "Active";
 
+    private String refreshToken;
+
     public User() {
     }
 

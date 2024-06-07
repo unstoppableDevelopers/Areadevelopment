@@ -6,7 +6,6 @@ import com.sparta.areadevelopment.dto.SignupResponseDto;
 import com.sparta.areadevelopment.dto.UpdateUserDto;
 import com.sparta.areadevelopment.dto.UserInfoDto;
 import com.sparta.areadevelopment.entity.User;
-import com.sparta.areadevelopment.exception.GlobalExceptionHandler;
 import com.sparta.areadevelopment.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +31,9 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<SignupResponseDto> register(
             @RequestBody @Valid SignupRequestDto requestDto) throws Exception {
-            userService.signUp(requestDto);
-            SignupResponseDto signupResponseDto = new SignupResponseDto("Successfully Signed Up");
-            return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
+        userService.signUp(requestDto);
+        SignupResponseDto signupResponseDto = new SignupResponseDto("Successfully Signed Up");
+        return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{userId}")
@@ -59,9 +58,9 @@ public class UserController {
     public ResponseEntity<User> signout(
             @PathVariable(name = "userId") Long userId
             , @RequestBody SignOutRequestDto requestDto) {
-            User user = userService.signOut(userId, requestDto);
-            // token 검증
-            return ResponseEntity.ok().body(user);
+        User user = userService.signOut(userId, requestDto);
+        // token 검증
+        return ResponseEntity.ok().body(user);
     }
 }
 
