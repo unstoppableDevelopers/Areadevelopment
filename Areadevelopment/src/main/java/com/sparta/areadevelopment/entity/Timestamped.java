@@ -10,6 +10,8 @@ import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Getter
 @MappedSuperclass
@@ -17,7 +19,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 public abstract class Timestamped {
-
     // 해당 추상 클래스를 상속받는 클래스에서는 모두 creatAt, modifiedAt
     // 컬럼이 생성됩니다.
     @CreatedDate
@@ -25,6 +26,7 @@ public abstract class Timestamped {
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+
 
     // 마지막 변경 시간을 저장합니다.
     @LastModifiedDate
