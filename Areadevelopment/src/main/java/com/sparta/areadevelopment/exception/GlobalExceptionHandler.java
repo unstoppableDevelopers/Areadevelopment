@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.exception;
 
+
 import com.sparta.areadevelopment.dto.ErrorResponseDto;
 import jakarta.transaction.NotSupportedException;
 import java.util.Collections;
@@ -9,10 +10,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 
@@ -79,4 +82,5 @@ public class GlobalExceptionHandler {
                 "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
                 HttpStatus.BAD_REQUEST);
     }
+
 }

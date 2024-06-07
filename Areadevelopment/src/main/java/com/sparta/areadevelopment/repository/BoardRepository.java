@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.repository;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.sparta.areadevelopment.entity.Board;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,4 +26,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query("UPDATE Board b SET b.likeCount = b.likeCount - 1 WHERE b.id = :boardId")
     void decrementLikeCount(@Param("boardId") Long boardId);
+
 }
