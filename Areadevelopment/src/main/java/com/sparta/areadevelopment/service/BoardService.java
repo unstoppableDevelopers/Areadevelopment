@@ -3,8 +3,10 @@ package com.sparta.areadevelopment.service;
 import com.sparta.areadevelopment.dto.BoardRequestDto;
 import com.sparta.areadevelopment.dto.BoardResponseDto;
 import com.sparta.areadevelopment.entity.Board;
+import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.management.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,10 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class BoardService {
 
+
+    /**
+     * 1. deletedAt = Null 인 경우에만 조회가 가능합니다. (삭제되는 순간 LocalDateTime.now()로 변경됩니다. 2.
+     * @AuthenticationPrincipal을 통해 User 정보를 받아 온 후 검증합니다. 3. board와 User은 다:1 , board와 comment는 1:다
+     * 관계로 맺어줬습니다.
+     */
     private final BoardRepository boardRepository;
 
-    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        Board board = boardRepository.save(new Board(requestDto));
+    public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
+        if(user == null){
+            throw new IllegalArgumentException("로그인 한 상태에서만 작성 할 수 있습니다.");
+        }
+        Board board = boardRepository.save(new Board(user, requestDto));
         return new BoardResponseDto(board);
     }
 
@@ -54,10 +65,15 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto update(BoardRequestDto requestDto, Long boardId) {
+    public BoardResponseDto update(User user, BoardRequestDto requestDto, Long boardId) {
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 요청입니다.")
         );
+
+        // 같은 사용자만 수정 가능
+        if (!Objects.equals(board.getUser().getId(), user.getId())) {
+            throw new IllegalArgumentException("작성자만 수정 가능합니다.");
+        }
 
         board.update(requestDto);
         return new BoardResponseDto(board);
@@ -65,17 +81,19 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponseDto delete(Long boardId) {
+    public BoardResponseDto delete(User user, Long boardId) {
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 요청입니다.")
         );
 
+        if (!Objects.equals(board.getUser().getId(), user.getId())) {
+            throw new IllegalArgumentException("작성자만 삭제 가능합니다.");
+        }
+
         // 삭제시간 저장
         board.setDeletedAt(board.getModifiedAt());
-
         log.info(board.getDeletedAt().toString());
-
         return new BoardResponseDto(board);
     }
 }
