@@ -3,6 +3,7 @@ package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.CommentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,13 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    //댓글 등록
     @PostMapping("/{boardId}/comments")
-    public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
+    public CommentResponseDto addComment(@AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long boardId, @RequestBody CommentRequestDto requestDto) {
-        return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
+        return commentService.addComment(userDetails.getUser().getId(), boardId, requestDto);
     }
+
 
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getAllComments(@PathVariable Long boardId) {
@@ -44,17 +47,18 @@ public class CommentController {
     }
 
     @PutMapping("/{boardId}/comments/{commentId}")
-    public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
+    public CommentResponseDto updateComment(@AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long boardId, @PathVariable Long commentId,
             @RequestBody CommentRequestDto requestDto) {
-        return commentService.updateComment(userDetails.getUsername(), boardId, commentId,
+        return commentService.updateComment(userDetails.getUser().getId(), boardId, commentId,
                 requestDto);
     }
 
     @DeleteMapping("/{boardId}/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<String> deleteComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long boardId, @PathVariable Long commentId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUsername(), boardId, commentId));
+                commentService.deleteComment(userDetails.getUser().getId(), boardId, commentId));
     }
 }

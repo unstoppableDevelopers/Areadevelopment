@@ -45,7 +45,6 @@ public class Comment extends Timestamped {
         this.likeCount = 0L;
         this.board = board;
         this.user = user;
-        user.addComments(this);
     }
 
     public void update(CommentRequestDto dto) {

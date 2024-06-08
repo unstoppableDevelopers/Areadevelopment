@@ -57,6 +57,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(NullPointerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+
     // 게시글 없으면 status 200 ok
     @ExceptionHandler(ServiceNotFoundException.class)
     public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
@@ -78,6 +84,7 @@ public class GlobalExceptionHandler {
         }
         return dbErrorMessage; // 기본 메시지 반환
     }
+
 
 }
 
