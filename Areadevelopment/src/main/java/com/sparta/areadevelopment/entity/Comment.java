@@ -54,4 +54,11 @@ public class Comment extends Timestamped {
     public void delete() {
         setDeletedAt(LocalDateTime.now());
     }
+
+    public boolean checkCommentAuthor(Long userId) {
+        if (!this.user.getId().equals(userId)) {
+            return true;
+        }
+        return false;
+    }
 }

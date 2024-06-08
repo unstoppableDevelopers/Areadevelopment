@@ -8,7 +8,6 @@ import com.sparta.areadevelopment.service.CommentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,19 +45,16 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/{boardId}/comments/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public CommentResponseDto updateComment(@AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable Long boardId, @PathVariable Long commentId,
-            @RequestBody CommentRequestDto requestDto) {
-        return commentService.updateComment(userDetails.getUser().getId(), boardId, commentId,
-                requestDto);
+            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+        return commentService.updateComment(userDetails.getUser().getId(), commentId, requestDto);
     }
 
-    @DeleteMapping("/{boardId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable Long boardId, @PathVariable Long commentId) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUser().getId(), boardId, commentId));
+                commentService.deleteComment(userDetails.getUser().getId(), commentId));
     }
 }
