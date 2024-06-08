@@ -1,9 +1,9 @@
 package com.sparta.areadevelopment.controller;
 
 
+import org.springframework.security.access.AccessDeniedException;
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
-import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.CommentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +32,9 @@ public class CommentController {
     @PostMapping("/{boardId}/comments")
     public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId, @RequestBody CommentRequestDto requestDto) {
+        if (userDetails == null) {
+            throw new AccessDeniedException("사용자 인가에 실패했습니다.");
+        }
         return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
     }
 
@@ -49,12 +52,18 @@ public class CommentController {
     @PutMapping("/comments/{commentId}")
     public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+        if (userDetails == null) {
+            throw new AccessDeniedException("사용자 인가에 실패했습니다.");
+        }
         return commentService.updateComment(userDetails.getUsername(), commentId, requestDto);
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long commentId) {
+        if (userDetails == null) {
+            throw new AccessDeniedException("사용자 인가에 실패했습니다.");
+        }
         return ResponseEntity.ok(
                 commentService.deleteComment(userDetails.getUsername(), commentId));
     }

@@ -8,6 +8,7 @@ import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -56,6 +57,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    //사용자 인가에 실패했을때 발생합니다.
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(AccessDeniedException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(NullPointerException e) {
