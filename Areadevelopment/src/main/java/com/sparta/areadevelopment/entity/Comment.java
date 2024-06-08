@@ -55,8 +55,8 @@ public class Comment extends Timestamped {
         setDeletedAt(LocalDateTime.now());
     }
 
-    public boolean checkCommentAuthor(Long userId) {
-        if (!this.user.getId().equals(userId)) {
+    public boolean checkCommentAuthor(String username) {
+        if (!this.user.getUsername().equals(username)) {
             return true;
         }
         return false;

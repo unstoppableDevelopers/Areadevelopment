@@ -24,8 +24,9 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     //댓글 등록
-    public CommentResponseDto addComment(Long userId, Long boardId, CommentRequestDto requestDto) {
-        User user = userRepository.findById(userId)
+    public CommentResponseDto addComment(String username, Long boardId,
+            CommentRequestDto requestDto) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NullPointerException("선택한 사용자는 없습니다."));
         Board board = findBoardById(boardId);
         Comment comment = new Comment(requestDto.getContent(), board, user);
@@ -42,13 +43,13 @@ public class CommentService {
 
     //특정 댓글 수정
     @Transactional
-    public CommentResponseDto updateComment(Long userId, Long commentId,
+    public CommentResponseDto updateComment(String username, Long commentId,
             CommentRequestDto requestDto) {
         Comment comment = findCommentById(commentId);
         if (comment.checkDeleted()) {
             throw new IllegalArgumentException("선택한 댓글은 삭제되어 있습니다.");
         }
-        if (comment.checkCommentAuthor(userId)) {
+        if (comment.checkCommentAuthor(username)) {
             throw new IllegalArgumentException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
         }
         comment.update(requestDto);
@@ -57,12 +58,12 @@ public class CommentService {
 
     //특정 댓글 삭제
     @Transactional
-    public String deleteComment(Long userId, Long commentId) {
+    public String deleteComment(String username, Long commentId) {
         Comment comment = findCommentById(commentId);
         if (comment.checkDeleted()) {
             throw new IllegalArgumentException("선택한 댓글은 삭제되어 있습니다.");
         }
-        if (comment.checkCommentAuthor(userId)) {
+        if (comment.checkCommentAuthor(username)) {
             throw new IllegalArgumentException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
         }
         ;
