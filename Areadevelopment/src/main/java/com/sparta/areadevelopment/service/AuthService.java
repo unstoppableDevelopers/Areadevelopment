@@ -3,9 +3,10 @@ package com.sparta.areadevelopment.service;
 import com.sparta.areadevelopment.dto.TokenDto;
 import com.sparta.areadevelopment.dto.UserLoginRequestDto;
 import com.sparta.areadevelopment.entity.RefreshToken;
+import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.jwt.TokenProvider;
-import com.sparta.areadevelopment.repository.RefreshTokenRepository;
 import com.sparta.areadevelopment.repository.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,16 +24,6 @@ public class AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    @Transactional
-    public UserLoginRequestDto signup(UserLoginRequestDto requestDto) {
-        if (userRepository.existsByUsername(requestDto.getUsername())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
-        }
-
-        return null;
-    }
 
     @Transactional
     public TokenDto login(String username, String password) {
@@ -45,35 +36,54 @@ public class AuthService {
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDto.getRefreshToken())
-                .build();
-
-        refreshTokenRepository.save(refreshToken);
-
+        Optional<User> user=userRepository.findByUsername(username);
+        user.get().updateValue(tokenDto.getRefreshToken());
         return tokenDto;
     }
 
     @Transactional
     // Access Token 리프레시
-    public TokenDto reissue(String refreshToken , String accessToken) {
-        if (refreshTokenRepository.findByValue(refreshToken).equals(refreshToken)) {
-            tokenProvider.validateToken(accessToken);
+    public TokenDto reissue(String refreshToken) {
+        if(!userRepository.findByRefreshToken(refreshToken).equals(refreshToken)){
+            throw new RuntimeException("잘못된 토큰입니다.");
         }
-        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        Optional<User> user = userRepository.findByRefreshToken(refreshToken);
+        String username = user.get().getUsername();
+        String password = user.get().getPassword();
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                username, password);
+        Authentication authentication =  authenticationManagerBuilder.getObject()
+                .authenticate(authenticationToken);
 
-        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-        RefreshToken originRefreshToken = refreshTokenRepository.findByKey(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-        if (!originRefreshToken.getValue().equals(refreshToken)) {
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-        }
+//        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
+//        User originRefreshToken = userRepository.findByUsername(authentication.getName())
+//                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+//        if (!originRefreshToken.getRefreshToken().equals(refreshToken)) {
+//            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+//        }
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
-        RefreshToken newRefreshToken = originRefreshToken.updateValue(tokenDto.getRefreshToken());
-        refreshTokenRepository.save(newRefreshToken);
+        user.get().updateValue(tokenDto.getRefreshToken());
 
         return tokenDto;
     }
+
+    @Transactional
+    public TokenDto logout(String accessToken, String refreshToken) {
+        //  Refresh Token 검증
+        if(!userRepository.findByRefreshToken(refreshToken).equals(refreshToken)){
+            throw new RuntimeException("잘못된 토큰입니다.");
+        }
+
+        //  Access Token 에서 Member ID 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+
+
+        // 새로운 토큰 생성
+        TokenDto tokenDto = tokenProvider.generateToken(authentication);
+
+        // 토큰 발급
+        return tokenDto;
+    }
 }
+
 

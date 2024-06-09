@@ -80,4 +80,8 @@ public class User extends Timestamped {
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
 
     }
+
+    public void updateValue(String refreshToken) {
+       this.refreshToken = refreshToken;
+    }
 }

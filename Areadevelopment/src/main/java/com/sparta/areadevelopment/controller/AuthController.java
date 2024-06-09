@@ -33,14 +33,17 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request,HttpServletResponse response) {
         String refreshToken = request.getHeader("refresh-token");
-        String accessToken = request.getHeader("access-token");
-        TokenDto token = authService.reissue(refreshToken,accessToken);
+        TokenDto token = authService.reissue(refreshToken);
         response.setHeader("access-token", token.getAccessToken());
         response.setHeader("refresh-token", token.getRefreshToken());
         return ResponseEntity.ok("재발급완료");
     }
     @DeleteMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody UserLoginRequestDto userLoginRequestDto) {
-        return null;
+    public ResponseEntity<String> logout(HttpServletRequest request,HttpServletResponse response) {
+        String refreshToken = request.getHeader("refresh-token");
+        String accessToken = request.getHeader("access-token");
+        TokenDto token = authService.logout(accessToken, refreshToken);
+        response.setHeader("refresh-token", token.getRefreshToken());
+        return ResponseEntity.ok("로그아웃완료");
     }
 }

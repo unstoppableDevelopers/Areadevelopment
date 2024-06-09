@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;  // 2주
-
+    private static final String GRANT_TYPE = "Bearer ";
     private final Key key;
 
     public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey) {
@@ -47,7 +47,7 @@ public class TokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 30분
         Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME); // 14일
 
-        String accessToken = Jwts.builder()
+        String accessToken = GRANT_TYPE + Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", "USER")
                 .setExpiration(accessTokenExpiresIn)
@@ -56,7 +56,7 @@ public class TokenProvider {
 
         log.info(parseClaims(accessToken).toString());
 
-        String refreshToken = Jwts.builder()
+        String refreshToken = GRANT_TYPE + Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

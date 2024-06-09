@@ -2,11 +2,11 @@ package com.sparta.areadevelopment.entity;
 
 public enum StatusEnum {
     DELETED("DELETED"),
-    ACTIVE("ACTIVATIVE");
+    ACTIVE("ACTIVATE");
 
-    private final String stat;
+    private final String status;
 
-    StatusEnum(String stat) {
-        this.stat = stat;
+    StatusEnum(String status) {
+        this.status = status;
     }
 }

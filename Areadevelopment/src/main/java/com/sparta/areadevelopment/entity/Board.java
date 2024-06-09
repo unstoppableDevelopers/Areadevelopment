@@ -74,7 +74,6 @@ public class Board {
         this.likeCount = 0L;
         this.modifiedAt = LocalDateTime.now();
         this.deletedAt = null;
-        this.comment = comment;
     }
 
     // 조회수 증가
