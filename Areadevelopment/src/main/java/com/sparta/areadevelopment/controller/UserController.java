@@ -37,7 +37,7 @@ public class UserController {
         return new ResponseEntity<>(signupResponseDto, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserInfoDto> getUserById(
             @PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userService.getUser(userId),

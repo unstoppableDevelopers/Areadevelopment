@@ -55,8 +55,7 @@ public class LikeService {
         LikeTypeEnum likeType = LikeTypeEnum.fromContentType(contentType);
 
         Optional<Like> checkLike = likeRepository.findByUserIdAndContentIdAndContentType(userId,
-                contentId,
-                likeType);
+                contentId, likeType);
 
         if (checkLike.isPresent()) {
             likeRepository.delete(checkLike.get());

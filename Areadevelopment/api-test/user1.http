@@ -1,0 +1,162 @@
+## Variables
+@username = abcdef12345
+@nickname = 닉네임
+@password = Abcdef12345!
+@email = user1@email.com
+@info = user1의 한줄소개
+
+# 테스트할때 아래 가입된 유저의 PK넘버가 1일수 있도록 테이블을 한번 드롭한 후 테스트해주세요.
+# 지금 편의상 id를 모두 1번을 넣어두어서 다른 테스트 후 삭제테스트를 진행하시거나 숫자를 바꾸면서 테스트해주세요.
+
+### 유저 회원 가입
+POST http://localhost:8080/api/users/sign-up
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "nickname":"{{nickname}}",
+  "password":"{{password}}",
+  "email":"{{email}}",
+  "info": "{{info}}"
+}
+
+### 유저 로그인 (로그인 요청시 억세스토큰, 리플레시토큰 자동 저장 후 다른곳에서 가져다 씀)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "password":"{{password}}"
+}
+
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("access-Token"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-Token"));
+%}
+
+
+### 리플레시 토큰 테스트
+POST http://localhost:8080/api/auth/reissue
+refresh-Token:{{Refresh-Token}}
+
+
+### (1번) 유저 프로필 조회
+# 유저 고유번호 확인!
+GET http://localhost:8080/api/users/1
+access-Token:{{Access-Token}}
+
+
+### (1번) 유저 프로필 수정 (테스트용)
+# 유저 고유번호 확인!
+PUT http://localhost:8080/api/users/1
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "nickname": "수정된 닉네임",
+  "password": "{{password}}",
+  "email": "modify@email.com",
+  "info": "영역전개!"
+}
+
+
+### (1번) 유저 프로필 수정 (원본으로)
+# 유저 고유번호 확인!
+PUT http://localhost:8080/api/users/1
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "nickname":"{{nickname}}",
+  "password":"{{password}}",
+  "email":"{{email}}",
+  "info": "{{info}}"
+}
+
+
+### (현재) 유저 로그아웃
+POST http://localhost:8080/api/auth/logout
+access-Token:{{Access-Token}}
+refresh-Toke:{{Refresh-Token}}
+
+
+### (1번) 유저 회원탈퇴
+# 유저 고유번호 확인!
+POST http://localhost:8080/api/users/1/sign-out
+access-Token:{{Access-Token}}
+refresh-Toke:{{Refresh-Token}}
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "password":"{{password}}"
+}
+
+### 게시글 등록
+POST http://localhost:8080/api/boards
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "title": "게시글제목",
+  "content": "게시글내용"
+}
+
+
+### 게시글 전체조회
+GET http://localhost:8080/api/boards
+
+
+### (1번) 게시글 단일조회
+# 게시글 고유번호 확인
+GET http://localhost:8080/api/boards/1
+
+
+### (1번) 게시글 수정
+# 게시글 고유번호 확인
+PUT http://localhost:8080/api/boards/1
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "title": "게시글제목수정",
+  "content": "게시글내용수정"
+}
+
+### (1번) 게시글 삭제
+# 게시글 고유번호 확인
+DELETE http://localhost:8080/api/boards/1
+access-Token:{{Access-Token}}
+
+
+### (1번) 댓글 등록 (1번게시글에 등록)
+# 게시글 고유번호, 댓글 고유번호 확인!
+POST http://localhost:8080/api/boards/1/comments
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "content": "댓글 내용"
+}
+
+
+### (1번) 게시글 아래의 댓글 전체 조회
+# 게시글 고유번호확인!
+GET http://localhost:8080/api/boards/1/comments
+
+
+### (1번 게시글의 1번 댓글 수정) 댓글 수정
+# 게시글 고유번호, 댓글 고유번호 확인!
+PUT http://localhost:8080/api/boards/1/comments/1
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "content": "댓글 내용 수정"
+}
+
+
+### (1번 게시글의 1번 댓글 삭제) 댓글 삭제
+# 게시글 고유번호, 댓글 고유번호 확인!
+DELETE http://localhost:8080/api/boards/1/comments/1
+access-Token:{{Access-Token}}
