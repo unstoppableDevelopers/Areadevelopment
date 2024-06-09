@@ -57,11 +57,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    //사용자 인가에 실패했을때 발생합니다.
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(AccessDeniedException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(NullPointerException e) {
