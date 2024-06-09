@@ -1,25 +1,26 @@
 package com.sparta.areadevelopment.service;
 
 import com.sparta.areadevelopment.dto.TokenDto;
-import com.sparta.areadevelopment.dto.UserLoginRequestDto;
-import com.sparta.areadevelopment.entity.RefreshToken;
 import com.sparta.areadevelopment.entity.User;
+import com.sparta.areadevelopment.enums.AuthEnum;
 import com.sparta.areadevelopment.jwt.TokenProvider;
 import com.sparta.areadevelopment.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuthService {
-
+public class AuthService implements LogoutHandler {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
@@ -44,10 +45,11 @@ public class AuthService {
     @Transactional
     // Access Token 리프레시
     public TokenDto reissue(String refreshToken) {
-        if(!userRepository.findByRefreshToken(refreshToken).equals(refreshToken)){
+        Optional<User> user = userRepository.findByRefreshToken(refreshToken);
+        if(user!=null && !user.get().getRefreshToken().equals(refreshToken)){
             throw new RuntimeException("잘못된 토큰입니다.");
         }
-        Optional<User> user = userRepository.findByRefreshToken(refreshToken);
+//        String resolveToken = resolveToken(user.get().getRefreshToken());
         String username = user.get().getUsername();
         String password = user.get().getPassword();
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -68,22 +70,22 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto logout(String accessToken, String refreshToken) {
-        //  Refresh Token 검증
-        if(!userRepository.findByRefreshToken(refreshToken).equals(refreshToken)){
-            throw new RuntimeException("잘못된 토큰입니다.");
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response , Authentication authentication) {
+        String authHeader = request.getHeader(AuthEnum.ACCESS_TOKEN.getValue());
+
+        if (authHeader == null && !authHeader.startsWith(AuthEnum.GRANT_TYPE.getValue())) {
+            throw new RuntimeException("알수 없는 access token.");
         }
+        String accessToken = authHeader.substring(7);
+        String username = tokenProvider.getUsername(accessToken);
+        User refreshToken = userRepository.findByUsername(username).orElse(null);
 
-        //  Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        refreshToken.setExpired(true);
 
-
-        // 새로운 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateToken(authentication);
-
-        // 토큰 발급
-        return tokenDto;
     }
+
+
 }
 
 
