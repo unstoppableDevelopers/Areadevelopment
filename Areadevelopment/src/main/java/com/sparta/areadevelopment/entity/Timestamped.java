@@ -44,7 +44,7 @@ public abstract class Timestamped {
     }
 
     //
-    public boolean checkDeleted() {
+    public boolean isDeleted() {
         if (this.deletedAt != null) {
             return true;
         }

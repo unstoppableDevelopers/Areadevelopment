@@ -46,10 +46,10 @@ public class CommentService {
     public CommentResponseDto updateComment(String username, Long commentId,
             CommentRequestDto requestDto) {
         Comment comment = findCommentById(commentId);
-        if (comment.checkDeleted()) {
+        if (comment.isDeleted()) {
             throw new IllegalArgumentException("선택한 댓글은 삭제되어 있습니다.");
         }
-        if (comment.checkCommentAuthor(username)) {
+        if (!comment.isCommentAuthor(username)) {
             throw new IllegalArgumentException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
         }
         comment.update(requestDto);
@@ -60,23 +60,22 @@ public class CommentService {
     @Transactional
     public String deleteComment(String username, Long commentId) {
         Comment comment = findCommentById(commentId);
-        if (comment.checkDeleted()) {
+        if (comment.isDeleted()) {
             throw new IllegalArgumentException("선택한 댓글은 삭제되어 있습니다.");
         }
-        if (comment.checkCommentAuthor(username)) {
+        if (!comment.isCommentAuthor(username)) {
             throw new IllegalArgumentException("선택한 댓글은 다른 사용자가 작성한 댓글입니다.");
         }
-        ;
         comment.delete();
         return "댓글 삭제 성공";
     }
 
-    public Board findBoardById(Long boardId) {
+    private Board findBoardById(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new NullPointerException("선택한 게시물은 없습니다."));
     }
 
-    public Comment findCommentById(Long commentId) {
+    private Comment findCommentById(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NullPointerException("선택한 댓글은 없습니다."));
     }
