@@ -2,12 +2,15 @@ package com.sparta.areadevelopment.exception;
 
 
 import jakarta.transaction.NotSupportedException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -75,8 +78,14 @@ public class GlobalExceptionHandler {
 
     // 특정 필드가 입력되지 않았을 경우 메세지를 반환합니다.
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(ex.getBindingResult().toString());
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
+        List<String> errors = new ArrayList<>();
+
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.add(error.getDefaultMessage());
+        }
+
+        return ResponseEntity.badRequest().body(errors);
     }
 
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
