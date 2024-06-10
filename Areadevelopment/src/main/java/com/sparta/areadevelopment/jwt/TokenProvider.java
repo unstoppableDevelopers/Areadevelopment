@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.jwt;
 
 import com.sparta.areadevelopment.dto.TokenDto;
+import com.sparta.areadevelopment.enums.AuthEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -28,8 +29,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;  // 2주
-
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;// 2주
+    String token = AuthEnum.GRANT_TYPE.getValue();
     private final Key key;
 
     public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey) {
@@ -47,18 +48,20 @@ public class TokenProvider {
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 30분
         Date refreshTokenExpiresIn = new Date(now + REFRESH_TOKEN_EXPIRE_TIME); // 14일
 
-        String accessToken = Jwts.builder()
+        String accessToken = token + Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", "USER")
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
+                .setIssuedAt(new Date(now))
                 .compact();
 
-        log.info(parseClaims(accessToken).toString());
+        log.info(accessToken);
 
-        String refreshToken = Jwts.builder()
+        String refreshToken = token + Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
+                .setIssuedAt(new Date(now))
                 .compact();
 
         log.info("accessToken: {}", accessToken);

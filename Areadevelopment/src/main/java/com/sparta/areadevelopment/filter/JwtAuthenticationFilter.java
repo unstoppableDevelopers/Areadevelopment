@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.filter;
 
+import com.sparta.areadevelopment.enums.AuthEnum;
 import com.sparta.areadevelopment.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,6 @@ import org.springframework.web.filter.GenericFilterBean;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final TokenProvider jwtTokenProvider;
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -36,8 +36,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     // Request Header 에서 토큰 정보 추출
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+        String bearerToken = request.getHeader(AuthEnum.ACCESS_TOKEN.getValue());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AuthEnum.GRANT_TYPE.getValue())) {
             return bearerToken.substring(7);
         }
         return null;

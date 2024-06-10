@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     public void signUp(SignupRequestDto requestDto) {
 
         User user = new User(
@@ -88,9 +89,10 @@ public class UserService {
     }
 
     private void checkPassword(User user, String password){
-        if (!Objects.equals(user.getPassword(), password)
+        if (!Objects.equals(user.getPassword(),  password)
         ) {
             throw new IllegalArgumentException("Invalid password.");
         }
     }
+
 }

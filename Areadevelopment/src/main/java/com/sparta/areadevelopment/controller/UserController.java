@@ -38,8 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<UserInfoDto> getUserById(
-            @PathVariable("userId") Long userId) {
+    public ResponseEntity<UserInfoDto> getUserById(@PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userService.getUser(userId),
                 HttpStatus.OK);
     }

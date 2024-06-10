@@ -1,0 +1,87 @@
+## Variables
+@username = abcdef12345
+@nickname = 닉네임
+@password = Abcdef12345!
+@email = user1@email.com
+@info = user1의 한줄소개
+
+# 테스트할때 아래 가입된 유저의 PK넘버가 1일수 있도록 테이블을 한번 드롭한 후 테스트해주세요.
+
+### 유저 회원 가입
+POST http://localhost:8080/api/users/sign-up
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "nickname":"{{nickname}}",
+  "password":"{{password}}",
+  "email":"{{email}}",
+  "info": "{{info}}"
+}
+
+### 유저 로그인
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "password":"{{password}}"
+}
+
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("access-Token"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-Token"));
+%}
+
+
+### 리플레시 토큰 테스트
+POST http://localhost:8080/api/auth/reissue
+refresh-token:{{Refresh-Token}}
+
+
+### 유저 프로필 조회
+GET http://localhost:8080/api/users/1
+access-token:{{access-Token}}
+
+
+### 유저 프로필 수정 (테스트용)
+PUT http://localhost:8080/api/users/1
+access-token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "nickname": "수정된 닉네임",
+  "password": "{{password}}",
+  "email": "modify@email.com",
+  "info": "영역전개!"
+}
+
+
+### 유저 프로필 수정 (원본으로)
+PUT http://localhost:8080/api/users/1
+access-Token:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "nickname":"{{nickname}}",
+  "password":"{{password}}",
+  "email":"{{email}}",
+  "info": "{{info}}"
+}
+
+### 유저 로그아웃
+POST http://localhost:8080/api/auth/logout
+access-token:{{Access-Token}}
+refresh-token:{{Refresh-Token}}
+
+
+### 유저 회원탈퇴
+POST http://localhost:8080/api/users/1/sign-out
+Access-Token:{{Access-Token}}
+Refresh-Toke:{{Refresh-Token}}
+Content-Type: application/json
+
+{
+  "username":"{{username}}",
+  "password":"{{password}}"
+}

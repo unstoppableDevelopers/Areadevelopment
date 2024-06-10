@@ -80,6 +80,8 @@ public class Board {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
         this.modifiedAt = LocalDateTime.now();
-
-    }
 }
+}
+
+    
+
