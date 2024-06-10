@@ -2,9 +2,9 @@ package com.sparta.areadevelopment.service;
 
 import com.sparta.areadevelopment.config.MailManager;
 import com.sparta.areadevelopment.dto.TokenDto;
-import com.sparta.areadevelopment.entity.StatusEnum;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.enums.AuthEnum;
+import com.sparta.areadevelopment.enums.StatusEnum;
 import com.sparta.areadevelopment.jwt.TokenProvider;
 import com.sparta.areadevelopment.repository.UserRepository;
 import com.sparta.areadevelopment.util.SHA256Util;
@@ -56,7 +56,7 @@ public class AuthService implements LogoutHandler {
 
         SecurityContextHolder.setContext(context);
 
-        user.get().updateValue(tokenDto.getRefreshToken());
+        user.get().updateToken(tokenDto.getRefreshToken());
         user.get().setExpired(false);
         return tokenDto;
     }
@@ -76,7 +76,7 @@ public class AuthService implements LogoutHandler {
 
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
-        user.get().updateValue(tokenDto.getRefreshToken());
+        user.get().updateToken(tokenDto.getRefreshToken());
 
         return tokenDto;
     }
