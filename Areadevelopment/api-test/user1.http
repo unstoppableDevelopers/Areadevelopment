@@ -1,7 +1,7 @@
 ## Variables
 @username = abcdef12345
 @nickname = 닉네임
-@password = Abcdef12345!
+@password = Abcdef12345AS!
 @email = user1@email.com
 @info = user1의 한줄소개
 

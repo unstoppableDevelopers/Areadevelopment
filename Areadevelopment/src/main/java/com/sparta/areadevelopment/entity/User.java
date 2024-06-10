@@ -67,10 +67,11 @@ public class User extends Timestamped {
         this.info = info;
     }
 
+
     public void updateInfo(UpdateUserDto request) {
-        this.nickname = request.getNickname();
-        this.email = request.getEmail();
-        this.info = request.getInfo();
+        if(request.getNickname() != null) this.nickname = request.getNickname();
+        if(request.getEmail() != null) this.email = request.getEmail();
+        if(request.getInfo() != null) this.info = request.getInfo();
     }
 
     public void updatePassword(String password) {

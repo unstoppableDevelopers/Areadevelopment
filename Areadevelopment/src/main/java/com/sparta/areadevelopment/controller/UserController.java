@@ -34,7 +34,7 @@ public class UserController {
             @Valid @RequestBody SignupRequestDto requestDto) {
         Long userId = userService.signUp(requestDto);
         return ResponseEntity.ok(
-                new CommonResponse(HttpStatus.OK.value(), "Success to create User : " + userId));
+                new CommonResponse(HttpStatus.OK.value(), "Success to create User "));
     }
 
 
@@ -43,7 +43,7 @@ public class UserController {
             @PathVariable("userId") Long userId) {
 
         return ResponseEntity.ok(
-                new CommonResponse<>(HttpStatus.OK.value(), "Success to get User : " + userId,
+                new CommonResponse<>(HttpStatus.OK.value(), "Success to get User ",
                         userService.getUser(userId)));
     }
 

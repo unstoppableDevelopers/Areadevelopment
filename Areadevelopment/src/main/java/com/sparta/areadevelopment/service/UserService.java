@@ -19,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService customUserDetailsService;
 
     public Long signUp(SignupRequestDto requestDto) {
         User user = new User(
@@ -34,7 +35,6 @@ public class UserService {
     public UserInfoDto getUser(Long userId) {
         // 특정 유저 있는 지 확인
         User user = findUser(userId);
-
         return new UserInfoDto(user.getUsername(), user.getNickname(),
                 user.getInfo(), user.getEmail());
     }
