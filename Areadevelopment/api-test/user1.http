@@ -152,7 +152,7 @@ Content-Type: application/json
 
 ### (1번) 게시글 삭제
 # 게시글 고유번호 확인
-DELETE http://localhost:8080/api/boards/3
+DELETE http://localhost:8080/api/boards/1
 Authorization:{{Access-Token}}}
 
 

@@ -25,7 +25,5 @@ public class SignupRequestDto {
     private String email;
 
     private String info;
-
-//    private String authority;
 }
 

@@ -87,6 +87,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> handleNullPointerException(NullPointerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+    
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
     private String parseErrorMessage(String dbErrorMessage) {
         if (dbErrorMessage.contains("duplicate key value violates unique constraint")) {

@@ -12,15 +12,44 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentResponseDto {
 
+    /**
+     * 댓글의 고유번호입니다.
+     */
     private Long id;
+    /**
+     * 게시판의 고유번호입니다.
+     */
     private Long boardId;
+    /**
+     * 유저의 고유번호입니다.
+     */
     private Long userId;
+    /**
+     * 댓글의 내용입니다.
+     */
     private String content;
+    /**
+     * 댓글의 좋아요 수입니다.
+     */
     private Long likeCount;
+    /**
+     * 댓글의 삭제시간입니다.
+     */
     private LocalDateTime deleteAt;
+    /**
+     * 댓글의 생성시간입니다.
+     */
     private LocalDateTime createdAt;
+    /**
+     * 댓글의 수정시간입니다.
+     */
     private LocalDateTime modifiedAt;
 
+    /**
+     * 객체의 생성자입니다.
+     *
+     * @param comment 댓글 Entity 입니다.
+     */
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.boardId = comment.getBoard().getId();
