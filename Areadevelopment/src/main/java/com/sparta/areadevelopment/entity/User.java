@@ -2,6 +2,7 @@ package com.sparta.areadevelopment.entity;
 
 
 import com.sparta.areadevelopment.dto.UpdateUserDto;
+import com.sparta.areadevelopment.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @String status : 탈퇴 여부를 저장 합니다. -> "Active", "Deleted"
@@ -22,7 +22,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "users")
 public class User extends Timestamped {
 
@@ -48,8 +47,7 @@ public class User extends Timestamped {
     private String email;
     private String info;
     @Column(nullable = false)
-
-    private StatusEnum status = StatusEnum.ACTIVE;
+    private String status = StatusEnum.ACTIVE.getStat();
 
     private String refreshToken;
 
@@ -67,17 +65,25 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-    public void updateProfile(UpdateUserDto user) {
-        this.nickname = user.getNickname();
-        this.email = user.getEmail();
-        this.info = user.getInfo();
-        this.password = user.getPassword();
+    public void updateInfo(UpdateUserDto updateUserDto) {
+        if (updateUserDto.getNickname() != null) {
+            this.nickname = updateUserDto.getNickname();
+        }
+        if (updateUserDto.getEmail() != null) {
+            this.email = updateUserDto.getEmail();
+        }
+        if (updateUserDto.getInfo() != null) {
+            this.info = updateUserDto.getInfo();
+        }
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
-        this.status = StatusEnum.DELETED;
+        this.status = StatusEnum.DELETED.getStat();
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
-
     }
 }

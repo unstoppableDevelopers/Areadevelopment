@@ -16,10 +16,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+
 @RequiredArgsConstructor
 @ComponentScan(basePackages = "com.sparta.areadevelopment.jwt")
 public class SecurityConfig {
-   private final TokenProvider tokenProvider;
+
+    private final TokenProvider tokenProvider;
+
     //암호화
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -39,16 +42,17 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
         //경로 별 인가
         http
-                .authorizeHttpRequests((auth) ->auth
-                                .requestMatchers("/auth/reissue","/**","/auth/login").permitAll()
-                                .anyRequest().authenticated()
-                        );
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/auth/reissue", "/**", "/auth/login").permitAll()
+                        .anyRequest().authenticated()
+                );
         http
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         //세션 jwt를 통해 인증 인가를 위해 stateless 상태 설정
         http
-                .sessionManagement((session) ->session
+                .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

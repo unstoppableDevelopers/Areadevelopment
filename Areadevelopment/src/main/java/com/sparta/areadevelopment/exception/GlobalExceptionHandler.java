@@ -8,7 +8,9 @@ import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -69,6 +71,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
                 HttpStatus.BAD_REQUEST);
+    }
+
+    // 특정 필드가 입력되지 않았을 경우 메세지를 반환합니다.
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        return ResponseEntity.badRequest().body(ex.getBindingResult().toString());
     }
 
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
