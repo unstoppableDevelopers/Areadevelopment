@@ -1,4 +1,4 @@
-package com.sparta.areadevelopment.entity;
+package com.sparta.areadevelopment.enums;
 
 public enum StatusEnum {
     DELETED("DELETED"),

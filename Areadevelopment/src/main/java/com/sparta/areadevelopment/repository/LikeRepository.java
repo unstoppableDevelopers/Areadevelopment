@@ -1,7 +1,7 @@
 package com.sparta.areadevelopment.repository;
 
 import com.sparta.areadevelopment.entity.Like;
-import com.sparta.areadevelopment.entity.LikeTypeEnum;
+import com.sparta.areadevelopment.enums.LikeTypeEnum;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -2,19 +2,16 @@ package com.sparta.areadevelopment.entity;
 
 
 import com.sparta.areadevelopment.dto.UpdateUserDto;
+import com.sparta.areadevelopment.enums.StatusEnum;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -79,6 +76,6 @@ public class User extends Timestamped {
     }
 
     public void updateValue(String refreshToken) {
-       this.refreshToken = refreshToken;
+        this.refreshToken = refreshToken;
     }
 }
