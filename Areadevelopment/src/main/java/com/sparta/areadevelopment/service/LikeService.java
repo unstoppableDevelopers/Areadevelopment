@@ -3,12 +3,11 @@ package com.sparta.areadevelopment.service;
 import com.sparta.areadevelopment.entity.Board;
 import com.sparta.areadevelopment.entity.Comment;
 import com.sparta.areadevelopment.entity.Like;
-import com.sparta.areadevelopment.enums.LikeTypeEnum;
 import com.sparta.areadevelopment.entity.User;
+import com.sparta.areadevelopment.enums.LikeTypeEnum;
 import com.sparta.areadevelopment.repository.BoardRepository;
 import com.sparta.areadevelopment.repository.CommentRepository;
 import com.sparta.areadevelopment.repository.LikeRepository;
-import com.sparta.areadevelopment.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class LikeService {
 
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
@@ -28,14 +26,12 @@ public class LikeService {
      * 지정된 Repository 로 Service 를 생성합니다.
      *
      * @param likeRepository    Like Entity 의 저장장소
-     * @param userRepository    User Entity 의 저장장소
      * @param boardRepository   Board Entity 의 저장장소
      * @param commentRepository Comment Entity 의 저장장소
      */
-    public LikeService(LikeRepository likeRepository, UserRepository userRepository,
-            BoardRepository boardRepository, CommentRepository commentRepository) {
+    public LikeService(LikeRepository likeRepository, BoardRepository boardRepository,
+            CommentRepository commentRepository) {
         this.likeRepository = likeRepository;
-        this.userRepository = userRepository;
         this.boardRepository = boardRepository;
         this.commentRepository = commentRepository;
     }
@@ -43,7 +39,7 @@ public class LikeService {
     /**
      * 지정된 사용자가 선탠한 컨텐츠에 대해 좋아요 내역이 없다면 추가, 정보가 있다면 삭제합니다.
      *
-     * @param userId      좋아요를 누른 사용자 고유번호
+     * @param user        좋아요를 누른 사용자 객체
      * @param contentType 좋아요를 누른 컨텐츠 타입
      * @param contentId   좋아요를 누른 컨텐츠의 고유 번호
      * @return 좋아요 등록 : true 좋아요 취소 : false
@@ -75,7 +71,6 @@ public class LikeService {
      */
     private void validateContentUser(Long userId, String contentType, Long contentId) {
 
-        Long likedUserId = null;
         // 객체를 가져옵니다
         if (LikeTypeEnum.BOARD.equalsType(contentType)) {
             Board board = boardRepository.findById(contentId)

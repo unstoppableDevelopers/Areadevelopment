@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,18 +28,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     /**
-     *  로그인 서비스 호출
+     * 로그인 서비스 호출
      */
     private final AuthService authService;
 
     /**
      * 로그인 URL
+     *
      * @param userLoginRequestDto
-     * @param response  토큰 헤더 설정
-     * @return  200 ok
+     * @param response            토큰 헤더 설정
+     * @return 200 ok
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginRequestDto,
+            HttpServletResponse response) {
         String username = userLoginRequestDto.getUsername();
         String password = userLoginRequestDto.getPassword();
         TokenDto token = authService.login(username, password);
@@ -52,7 +52,8 @@ public class AuthController {
 
     /**
      * 리프레시 토큰을 통한 엑세스 리프레쉬 토큰 재발급 controller
-     * @param request 헤더의 토큰
+     *
+     * @param request  헤더의 토큰
      * @param response 새로운 토큰 세팅
      * @return 200 ok
      */
@@ -67,8 +68,8 @@ public class AuthController {
     }
 
     /**
-     * 로그아웃 controller
-     * 시큐리티 config의 매서드 오출
+     * 로그아웃 controller 시큐리티 config의 매서드 오출
+     *
      * @param request
      * @param response
      * @param authentication
@@ -83,23 +84,27 @@ public class AuthController {
 
     /**
      * 메일 전송 controller
+     *
      * @param customUserDetails 이메일 정보를 UserDetails로 받음
      * @return 200ok
      */
     @PostMapping("/send-mail")
-    public ResponseEntity<String> sendMail(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<String> sendMail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return authService.sendMail(customUserDetails.getUser().getEmail());
     }
 
     /**
      * 이메일 인증 확인 controller
-     * @param key 인증 키
+     *
+     * @param key               인증 키
      * @param customUserDetails 유저 이메일
      * @return 200ok
      */
     @PostMapping("/check-mail")
-    public ResponseEntity<String> checkMail(@RequestBody KeyDto key, @AuthenticationPrincipal CustomUserDetails customUserDetails){
+    public ResponseEntity<String> checkMail(@RequestBody KeyDto key,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         return authService.checkMail(key.getKey(), customUserDetails.getUser().getEmail());
     }

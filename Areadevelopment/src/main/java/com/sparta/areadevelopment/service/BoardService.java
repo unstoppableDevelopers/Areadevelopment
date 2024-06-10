@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class BoardService {
 
-
     /**
      * 1. deletedAt = Null 인 경우에만 조회가 가능합니다. (삭제되는 순간 LocalDateTime.now()로 변경됩니다. 2.
      *
@@ -43,7 +42,6 @@ public class BoardService {
     }
 
     // 모든 페이지 조회, 글이 있을 경우 ApiResponseDto의 data 조회
-
     public List<BoardResponseDto> findAll() throws ServiceNotFoundException {
         List<BoardResponseDto> list = boardRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc()
                 .stream()

@@ -18,6 +18,7 @@ public class SignOutRequestDto {
     @NotBlank(message = "Required Username")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[0-9])[a-z0-9]{10,20}$", message = "사용자 ID는 최소 10글자 이상, 최대 20글자 이하여야 합니다.")
     private String username;
+
     /**
      * @String password
      */

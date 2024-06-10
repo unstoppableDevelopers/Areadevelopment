@@ -19,7 +19,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final CustomUserDetailsService customUserDetailsService;
 
     public Long signUp(SignupRequestDto requestDto) {
         User user = new User(

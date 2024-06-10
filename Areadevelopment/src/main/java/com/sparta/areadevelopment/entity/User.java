@@ -27,28 +27,27 @@ public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<Comment>();
-
-    public void addComments(Comment comment) {
-        comments.add(comment);
-    }
-
+    
     @Column(unique = true, nullable = false)
     private String username;
+
     @Column(unique = true, nullable = false)
     private String nickname;
+
     @Column(nullable = false)
     private String password;
+
     @Column(unique = true, nullable = false)
     private String email;
+
     private String info;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusEnum status = StatusEnum.ACTIVE;
+
     private String refreshToken;
+
     //토큰 폐지
     private boolean expired = false;
 
@@ -66,11 +65,16 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-
     public void updateInfo(UpdateUserDto request) {
-        if(request.getNickname() != null) this.nickname = request.getNickname();
-        if(request.getEmail() != null) this.email = request.getEmail();
-        if(request.getInfo() != null) this.info = request.getInfo();
+        if (request.getNickname() != null) {
+            this.nickname = request.getNickname();
+        }
+        if (request.getEmail() != null) {
+            this.email = request.getEmail();
+        }
+        if (request.getInfo() != null) {
+            this.info = request.getInfo();
+        }
     }
 
     public void updatePassword(String password) {
