@@ -5,11 +5,10 @@ import com.sparta.areadevelopment.dto.BoardResponseDto;
 import com.sparta.areadevelopment.entity.Board;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
-import com.sparta.areadevelopment.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import javax.management.ServiceNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +28,7 @@ public class BoardService {
      * 관계로 맺어줬습니다.
      */
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
+
 
     public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
         Board board = boardRepository.save(new Board(user, requestDto));
@@ -37,23 +36,22 @@ public class BoardService {
     }
 
     // 모든 페이지 조회, 글이 있을 경우 ApiResponseDto의 data 조회
-    public List<BoardResponseDto> findAll() throws ServiceNotFoundException {
+    public Optional<Object> findAll() {
         List<BoardResponseDto> list = boardRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc()
                 .stream()
                 .map(BoardResponseDto::new).toList();
 
         // 글이 없을 경우 메시지와 200 Status code 던져줌
         if (list.isEmpty()) {
-            throw new ServiceNotFoundException("먼저 작성하여 소식을 알려보세요!");
+            return Optional.of("먼저 작성하여 소식을 알려보세요!");
         }
 
-        return list;
+        return Optional.of(list);
     }
 
     @Transactional(readOnly = true)
     // 최신순으로 10개씩 페이지네이션하는 Service 로직 추가.
-    public List<BoardResponseDto> findAllRecentlyPagination(int page)
-            throws ServiceNotFoundException {
+    public Optional<Object> findAllRecentlyPagination(int page) {
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         List<BoardResponseDto> list = boardRepository.findAllByDeletedAtIsNullOrderByCreatedAtDesc(
@@ -62,15 +60,15 @@ public class BoardService {
                 .map(BoardResponseDto::new).toList();
 
         if (list.isEmpty()) {
-            throw new ServiceNotFoundException("먼저 작성하여 소식을 알려보세요!");
+            return Optional.of("먼저 작성하여 소식을 알려보세요!");
         }
 
-        return list;
+        return Optional.of(list);
     }
 
     // 좋아요 많은 순으로 조회
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> findAllLikesPagination(int page) throws ServiceNotFoundException {
+    public Optional<Object> findAllLikesPagination(int page) {
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         List<BoardResponseDto> list = boardRepository.findAllByDeletedAtIsNullOrderByLikeCountDesc(
@@ -79,16 +77,19 @@ public class BoardService {
                 .map(BoardResponseDto::new).toList();
 
         if (list.isEmpty()) {
-            throw new ServiceNotFoundException("먼저 작성하여 소식을 알려보세요!");
+            return Optional.of("먼저 작성하여 소식을 알려보세요!");
         }
 
-        return list;
+        return Optional.of(list);
     }
 
     // 입력받은 기간 사이에 생성된 게시글들만 조회
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> findAllDatePagination(int page, LocalDateTime startDateTime,
-            LocalDateTime endDateTime) throws ServiceNotFoundException {
+    public Optional<Object> findAllDatePagination(
+            int page,
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime) {
+
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         List<BoardResponseDto> list =
@@ -98,9 +99,9 @@ public class BoardService {
                         .map(BoardResponseDto::new).toList();
 
         if (list.isEmpty()) {
-            throw new ServiceNotFoundException("먼저 작성하여 소식을 알려보세요!");
+            return Optional.of("먼저 작성하여 소식을 알려보세요!");
         }
-        return list;
+        return Optional.of(list);
     }
 
     @Transactional
