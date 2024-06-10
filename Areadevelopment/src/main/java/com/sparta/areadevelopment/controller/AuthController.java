@@ -6,6 +6,7 @@ import com.sparta.areadevelopment.enums.AuthEnum;
 import com.sparta.areadevelopment.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,16 @@ public class AuthController {
     public ResponseEntity<String> logout(HttpServletRequest request,HttpServletResponse response, Authentication authentication) {
         authService.logout(request, response, authentication);
         return ResponseEntity.ok("로그아웃완료");
+    }
+
+    @PostMapping("/send-mail")
+    public ResponseEntity<String> sendMail(HttpServletRequest request){
+        String refreshToken = request.getHeader("refresh-token");
+        return authService.sendMail(refreshToken);
+    }
+    @PostMapping("/check-mail")
+    public ResponseEntity<String> checkMail( HttpServletRequest request,@RequestBody String insertKey){
+        String refreshToken = request.getHeader("refresh-token");
+        return authService.checkMail(refreshToken, insertKey);
     }
 }

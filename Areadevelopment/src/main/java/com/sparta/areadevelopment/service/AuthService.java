@@ -1,14 +1,18 @@
 package com.sparta.areadevelopment.service;
 
+import com.sparta.areadevelopment.config.MailManager;
 import com.sparta.areadevelopment.dto.TokenDto;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.enums.AuthEnum;
 import com.sparta.areadevelopment.jwt.TokenProvider;
 import com.sparta.areadevelopment.repository.UserRepository;
+import com.sparta.areadevelopment.util.SHA256Util;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -25,6 +29,7 @@ public class AuthService implements LogoutHandler {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final MailManager mailManager;
 
     @Transactional
     public TokenDto login(String username, String password) {
@@ -39,6 +44,7 @@ public class AuthService implements LogoutHandler {
 
         Optional<User> user=userRepository.findByUsername(username);
         user.get().updateValue(tokenDto.getRefreshToken());
+        user.get().setExpired(false);
         return tokenDto;
     }
 
@@ -87,7 +93,31 @@ public class AuthService implements LogoutHandler {
 
     }
 
+    public ResponseEntity<String> sendMail(String token){
+        String userEmail = userRepository.findByRefreshToken(token).get().getEmail();
 
+        UUID uuid = UUID.randomUUID();
+        String key = uuid.toString().substring(0,7);
+        String sub = "인증번호 메일 전송";
+        String con = "인증번호 : " + key;
+        try {
+            mailManager.send(userEmail,sub,con);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        key = SHA256Util.getEncrypt(key, userEmail);
+        return ResponseEntity.ok(key);
+    }
+
+    public ResponseEntity<String> checkMail(String token, String insertKey){
+        if(userRepository.findByRefreshToken(token).isPresent() && !userRepository.findByRefreshToken(token).get().getRefreshToken().equals(token)){
+            new RuntimeException("잘못된 토큰입니다.");
+        }
+        String userEmail = userRepository.findByRefreshToken(token).get().getEmail();
+        insertKey = SHA256Util.getEncrypt(insertKey, userEmail);
+
+        return null;
+    }
 }
 
 
