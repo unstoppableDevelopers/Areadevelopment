@@ -14,4 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 탈퇴 여부를 확인하고 User를 가져오는 쿼리문
     @Query("SELECT u FROM User u WHERE u.id = :id AND u.status = :status")
     Optional<User> findUserByIdAndStatus(@Param("id") Long id, @Param("status") String status);
+    Optional<User> findByRefreshToken(String token);
 }
