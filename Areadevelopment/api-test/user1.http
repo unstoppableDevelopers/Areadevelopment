@@ -39,12 +39,14 @@ Content-Type: application/json
 POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
+
 > {%
   client.global.set("Access-Token", response.headers.valueOf("Authorization"));
   client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
 %}
 
-### (1번) 유저 프로필 조회
+
+### (2번) 유저 프로필 조회
 # 유저 고유번호 확인!
 GET http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
@@ -122,7 +124,7 @@ GET http://localhost:8080/api/boards
 
 ### (1번) 게시글 단일조회
 # 게시글 고유번호 확인
-GET http://localhost:8080/api/boards/1
+GET http://localhost:8080/api/boards/3
 
 
 ### (1번) 게시글 수정
@@ -173,3 +175,15 @@ Content-Type: application/json
 # 게시글 고유번호, 댓글 고유번호 확인!
 DELETE http://localhost:8080/api/boards/1/comments/1
 Authorization:{{Access-Token}}
+
+
+### (1번 게시글) 좋아요 등록 삭제
+#타입이랑 고유번호 확인!
+POST http://localhost:8080/api/likes
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "contentId": 3,
+  "contentType": "board"
+}

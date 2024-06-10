@@ -31,9 +31,9 @@ public class BoardController {
     // 조회를 제외하고는 모두 User의 정보가 필요하다.
     @PostMapping("/boards")
     public BoardResponseDto createBoard(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto) {
-        return boardService.createBoard(userDetails.getUsername(), requestDto);
+        return boardService.createBoard(userDetails.getUser(), requestDto);
     }
 
 
