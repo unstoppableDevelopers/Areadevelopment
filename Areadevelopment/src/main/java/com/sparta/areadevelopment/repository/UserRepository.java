@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.repository;
 
+import com.sparta.areadevelopment.entity.StatusEnum;
 import com.sparta.areadevelopment.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.id = :id AND u.status = :status")
     Optional<User> findUserByIdAndStatus(@Param("id") Long id, @Param("status") String status);
     Optional<User> findByRefreshToken(String token);
+    Optional<User> findUserByUsernameAndStatus(String username, StatusEnum statusEnum);
 }

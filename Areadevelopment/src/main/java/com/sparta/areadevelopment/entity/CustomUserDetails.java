@@ -1,23 +1,30 @@
 package com.sparta.areadevelopment.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+
 @Getter
 public class CustomUserDetails implements UserDetails {
+    private final User user;
+    private final String username;
+    private final String password;
+    private String email; //이메일
+    private boolean emailVerified; //  이메일 인증 여부
+    private Collection<? extends GrantedAuthority> authorities;
 
-    private User user;
-//    private String email; 이메일
-//    private boolean emailVerified;   이메일 인증 여부
-//    private Collection<? extends GrantedAuthority> authorities;
-
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(User user,  String username,  String password) {
         this.user = user;
+        this.username = username;
+        this.password = password;
     }
-
-    //    /**
+//    /**
 //     * 해당 유저의 권한 목록
 //     */
     @Override
@@ -43,8 +50,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     /**
-     * 계정 만료 여부 true : 만료 안됨 false : 만료
-     *
+     * 계정 만료 여부
+     * true : 만료 안됨
+     * false : 만료
      * @return
      */
     @Override
@@ -53,8 +61,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     /**
-     * 계정 잠김 여부 true : 잠기지 않음 false : 잠김
-     *
+     * 계정 잠김 여부
+     * true : 잠기지 않음
+     * false : 잠김
      * @return
      */
     @Override
@@ -63,8 +72,9 @@ public class CustomUserDetails implements UserDetails {
     }
 
     /**
-     * 비밀번호 만료 여부 true : 만료 안됨 false : 만료
-     *
+     * 비밀번호 만료 여부
+     * true : 만료 안됨
+     * false : 만료
      * @return
      */
     @Override
@@ -74,8 +84,9 @@ public class CustomUserDetails implements UserDetails {
 
 
     /**
-     * 사용자 활성화 여부 ture : 활성화 false : 비활성화
-     *
+     * 사용자 활성화 여부
+     * ture : 활성화
+     * false : 비활성화
      * @return
      */
     @Override
