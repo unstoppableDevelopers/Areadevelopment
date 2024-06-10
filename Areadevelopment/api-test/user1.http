@@ -140,6 +140,18 @@ GET http://localhost:8080/api/boards
 GET http://localhost:8080/api/boards/1
 
 
+### 게시글 페이지 네이션
+GET http://localhost:8080/api/boards/recently/1
+
+
+### 게시글 좋아요 순서 정렬 (10개고정)
+GET http://localhost:8080/api/boards/like/1
+
+
+### 게시글 기간별 조회(2024-06-10 ~ 2024-06-10)
+GET http://localhost:8080/api/boards/date/1?startTime=2024-06-10&endTime=2024-06-10
+
+
 ### (1번) 게시글 수정
 # 게시글 고유번호 확인
 PUT http://localhost:8080/api/boards/1
@@ -167,7 +179,6 @@ Content-Type: application/json
   "content": "댓글 내용"
 }
 
-
 ### (1번) 게시글 아래의 댓글 전체 조회
 # 게시글 고유번호확인!
 GET http://localhost:8080/api/boards/1/comments
@@ -178,6 +189,7 @@ GET http://localhost:8080/api/boards/1/comments
 PUT http://localhost:8080/api/boards/1/comments/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
+
 {
   "content": "댓글 내용 수정"
 }
@@ -196,8 +208,9 @@ Authorization:{{Access-Token}}
 POST http://localhost:8080/api/auth/check-mail
 Content-Type: application/json
 Authorization:{{Access-Token}}
+
 {
-  "key":"e318b8d"
+  "key": "e318b8d"
 }
 
 ### (1번 게시글) 좋아요 등록 삭제
@@ -205,8 +218,9 @@ Authorization:{{Access-Token}}
 POST http://localhost:8080/api/likes
 Authorization:{{Access-Token}}
 Content-Type: application/json
+
 {
-  "contentId": 3,
+  "contentId": 1,
   "contentType": "board"
 }
 
