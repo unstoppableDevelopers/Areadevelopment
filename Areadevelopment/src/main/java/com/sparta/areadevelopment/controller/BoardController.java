@@ -2,6 +2,7 @@ package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.BoardRequestDto;
 import com.sparta.areadevelopment.dto.BoardResponseDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.BoardService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
@@ -11,7 +12,6 @@ import javax.management.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +46,9 @@ public class BoardController {
      */
     @PostMapping("/boards")
     public BoardResponseDto createBoard(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto) {
-        return boardService.createBoard(userDetails.getUsername(), requestDto);
+        return boardService.createBoard(userDetails.getUser(), requestDto);
     }
 
     /**
@@ -115,11 +115,11 @@ public class BoardController {
      */
     @PutMapping("/boards/{boardId}")
     public BoardResponseDto updateBoard(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto,
             @PathVariable Long boardId) {
 
-        return boardService.updateBoard(userDetails.getUsername(), requestDto, boardId);
+        return boardService.updateBoard(userDetails.getUser(), requestDto, boardId);
     }
 
     /**
@@ -131,8 +131,8 @@ public class BoardController {
      */
     @DeleteMapping("/boards/{boardId}")
     public BoardResponseDto deleteBoard(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long boardId) {
-        return boardService.deleteBoard(userDetails.getUsername(), boardId);
+        return boardService.deleteBoard(userDetails.getUser(), boardId);
     }
 }
