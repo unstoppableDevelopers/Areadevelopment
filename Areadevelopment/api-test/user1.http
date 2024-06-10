@@ -46,7 +46,7 @@ refresh-token:{{Refresh-Token}}
 %}
 
 
-### (2번) 유저 프로필 조회
+### (1번) 유저 프로필 조회
 # 유저 고유번호 확인!
 GET http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
@@ -89,6 +89,18 @@ Content-Type: application/json
   "newPassword":"nada5011!@@#ASBA"
 }
 
+
+### 유저 비밀번호 수정 (원본으로)
+PUT http://localhost:8080/api/users/1/change-password
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "nada5011!@@#ASBA",
+  "newPassword":"{{password}}"
+}
+
+
 ### (현재) 유저 로그아웃
 POST http://localhost:8080/api/auth/logout
 Authorization:{{Access-Token}}
@@ -124,7 +136,7 @@ GET http://localhost:8080/api/boards
 
 ### (1번) 게시글 단일조회
 # 게시글 고유번호 확인
-GET http://localhost:8080/api/boards/3
+GET http://localhost:8080/api/boards/1
 
 
 ### (1번) 게시글 수정
@@ -140,7 +152,7 @@ Content-Type: application/json
 
 ### (1번) 게시글 삭제
 # 게시글 고유번호 확인
-DELETE http://localhost:8080/api/boards/1
+DELETE http://localhost:8080/api/boards/3
 Authorization:{{Access-Token}}}
 
 
@@ -177,6 +189,7 @@ DELETE http://localhost:8080/api/boards/1/comments/1
 Authorization:{{Access-Token}}
 
 
+
 ### (1번 게시글) 좋아요 등록 삭제
 #타입이랑 고유번호 확인!
 POST http://localhost:8080/api/likes
@@ -187,3 +200,5 @@ Content-Type: application/json
   "contentId": 3,
   "contentType": "board"
 }
+
+
