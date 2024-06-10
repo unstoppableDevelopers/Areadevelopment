@@ -18,8 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +39,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthService authService) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthService authService)
+            throws Exception {
         //csrf disable
         http
                 .csrf(AbstractHttpConfigurer::disable);
@@ -53,11 +52,12 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
         //경로 별 인가
         http
-                .authorizeHttpRequests((auth) ->auth
-                                .requestMatchers("/api/auth/reissue", "/api/users/sign-up", "/api/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.GET).permitAll()
-                                .anyRequest().authenticated()
-                        );
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/auth/reissue", "/api/users/sign-up",
+                                "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .anyRequest().authenticated()
+                );
         http
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
@@ -66,7 +66,8 @@ public class SecurityConfig {
                 .logout(auth -> auth
                         .logoutUrl("/api/auth/logout")
                         .addLogoutHandler(authService)
-                        .logoutSuccessHandler((((request,response,authentication) -> SecurityContextHolder.clearContext())))
+                        .logoutSuccessHandler(
+                                (((request, response, authentication) -> SecurityContextHolder.clearContext())))
                 );
         //세션 jwt를 통해 인증 인가를 위해 stateless 상태 설정
         http
