@@ -36,7 +36,7 @@ Content-Type: application/json
 %}
 
 
-### 리플레시 토큰 테스트
+### 리프레시 토큰 테스트
 POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
@@ -49,7 +49,7 @@ refresh-token:{{Refresh-Token}}
 
 ### (2번) 유저 프로필 조회
 # 유저 고유번호 확인!
-GET http://localhost:8080/api/users/2
+GET http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 
 
@@ -65,7 +65,7 @@ Content-Type: application/json
 
 ### (2번) 유저 프로필 수정 (원본으로)
 # 유저 고유번호 확인!
-PATCH http://localhost:8080/api/users/2
+PATCH http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
@@ -77,10 +77,8 @@ Content-Type: application/json
 }
 
 
-### $2a$10$Ia8bhwaG2KAqSpffv/TG0u/SQJP8UlZvVI9k4WmuMQ6C3uGGoSWT6
-
 ### 유저 비밀번호 수정
-PUT http://localhost:8080/api/users/2/change-password
+PUT http://localhost:8080/api/users/1/change-password
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
@@ -89,16 +87,25 @@ Content-Type: application/json
   "newPassword":"nada5011!@@#ASBA"
 }
 
+### 유저 비밀번호 원상 복구
+PUT http://localhost:8080/api/users/1/change-password
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "nada5011!@@#ASBA",
+  "newPassword":"{{password}}"
+}
+
 
 ### (현재) 유저 로그아웃
 POST http://localhost:8080/api/auth/logout
 Authorization:{{Access-Token}}
 refresh-token:{{Refresh-Token}}
 
-
 ### (2번) 유저 회원탈퇴
 # 유저 고유번호 확인!
-POST http://localhost:8080/api/users/2/sign-out
+POST http://localhost:8080/api/users/1/sign-out
 Authorization:{{Access-Token}}
 refresh-token:{{Refresh-Token}}
 Content-Type: application/json
@@ -125,7 +132,7 @@ GET http://localhost:8080/api/boards
 
 ### (2번) 게시글 단일조회
 #게시글 고유번호 확인!
-GET http://localhost:8080/api/boards/2
+GET http://localhost:8080/api/boards/1
 
 
 ### 게시글 페이지 네이션
@@ -142,7 +149,7 @@ GET http://localhost:8080/api/boards/date/2?startTime=2024-06-10&endTime=2024-06
 
 ### (2번) 게시글 수정
 #게시글 고유번호 확인!
-PUT http://localhost:8080/api/boards/2
+PUT http://localhost:8080/api/boards/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 

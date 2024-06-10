@@ -60,7 +60,7 @@ public class AuthController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissue(HttpServletRequest request,
             HttpServletResponse response) {
-        String refreshToken = request.getHeader("refresh-token");
+        String refreshToken = request.getHeader(AuthEnum.REFRESH_TOKEN.getValue());
         TokenDto token = authService.reissue(refreshToken);
         response.setHeader(AuthEnum.ACCESS_TOKEN.getValue(), token.getAccessToken());
         response.setHeader(AuthEnum.REFRESH_TOKEN.getValue(), token.getRefreshToken());

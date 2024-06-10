@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.dto;
 
+import com.sparta.areadevelopment.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

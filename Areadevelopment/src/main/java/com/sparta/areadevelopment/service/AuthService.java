@@ -60,6 +60,7 @@ public class AuthService implements LogoutHandler {
         bCryptPasswordEncoder.matches(password, user.get().getPassword());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 username,password);
+        // false가 활성화임
         user.get().setExpired(false);
 
         Authentication authentication = authenticationManagerBuilder.getObject()
