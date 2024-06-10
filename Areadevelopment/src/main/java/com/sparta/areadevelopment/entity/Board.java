@@ -39,10 +39,10 @@ public class Board {
     private Long id;
 
     @Column(nullable = false)
-    private java.lang.String title;
+    private String title;
 
     @Column(nullable = false)
-    private java.lang.String content;
+    private String content;
 
     @Column(nullable = false)
     private Long hits;
