@@ -51,7 +51,6 @@ public class User extends Timestamped {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusEnum status = StatusEnum.ACTIVE;
-
     private String refreshToken;
     //토큰 폐지
     private boolean expired = false;

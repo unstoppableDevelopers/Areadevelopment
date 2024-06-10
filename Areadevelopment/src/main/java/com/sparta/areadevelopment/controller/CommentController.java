@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/boards")
 public class CommentController {
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     private final CommentService commentService;
 
     /**

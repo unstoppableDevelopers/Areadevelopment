@@ -20,15 +20,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+/**
+ *  DTO의 생성자 매서드
+ *
+ */
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @Autowired
     private final UserService userService;
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @PostMapping("/sign-up")
     public ResponseEntity signUp(
             @Valid @RequestBody SignupRequestDto requestDto) {
@@ -37,7 +46,10 @@ public class UserController {
                 new CommonResponse(HttpStatus.OK.value(), "Success to create User : " + userId));
     }
 
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @GetMapping("/{userId}")
     public ResponseEntity getUser(
             @PathVariable("userId") Long userId) {
@@ -47,7 +59,10 @@ public class UserController {
                         userService.getUser(userId)));
     }
 
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @PatchMapping("/{userId}")
     public ResponseEntity updateProfile(
             @PathVariable("userId") Long userId,
@@ -58,7 +73,10 @@ public class UserController {
         return ResponseEntity.ok(
                 new CommonResponse<>(HttpStatus.OK.value(), "Success to update User : " + userId));
     }
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     // redirect status code 가 있다.
     @PutMapping("/{userId}/change-password")
     public ResponseEntity changePassword(@PathVariable("userId") Long userId,
@@ -68,7 +86,10 @@ public class UserController {
                 "Success to update Password of user " + userId));
     }
 
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @PostMapping("/{userId}/sign-out")
     public ResponseEntity<CommonResponse> signOut(
             @PathVariable(name = "userId") Long userId

@@ -4,22 +4,27 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+/**
+ * 이메일 인증 암호화 클래스
+ */
 public class SHA256Util {
-
-    private SHA256Util() {
-
-    }
+    private SHA256Util() {}
     public static String getEncrypt(String source, String salt) {
         return getEncrypt(source, salt.getBytes());
     }
+
+    /**
+     * 암호화 메서드
+     * @param source
+     * @param salt
+     * @return
+     */
     public static String getEncrypt(String source, byte[] salt) {
         String result = "";
-
         byte[] a = source.getBytes();
         byte[] bytes = new byte[a.length + salt.length];
         System.arraycopy(a, 0, bytes, 0, a.length);
         System.arraycopy(salt, 0, bytes, a.length, salt.length);
-
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(bytes);
@@ -34,10 +39,8 @@ public class SHA256Util {
         }
         return result;
     }
-
     public static String createSalt(){
         Random random = new Random();
-
         byte[] salt = new byte[8];
         random.nextBytes(salt);
         StringBuffer sb = new StringBuffer();
@@ -46,5 +49,4 @@ public class SHA256Util {
         }
         return sb.toString();
     }
-
 }
