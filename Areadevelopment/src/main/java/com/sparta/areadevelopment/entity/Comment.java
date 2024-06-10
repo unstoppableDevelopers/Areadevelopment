@@ -39,7 +39,6 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-
     public Comment(String content, Board board, User user) {
         this.content = content;
         this.likeCount = 0L;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 
-// AOP
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -91,7 +90,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleNullPointerException(NullPointerException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-    
+
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
     private String parseErrorMessage(String dbErrorMessage) {
         if (dbErrorMessage.contains("duplicate key value violates unique constraint")) {

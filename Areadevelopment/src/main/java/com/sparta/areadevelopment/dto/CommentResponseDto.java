@@ -16,30 +16,37 @@ public class CommentResponseDto {
      * 댓글의 고유번호입니다.
      */
     private Long id;
+
     /**
      * 게시판의 고유번호입니다.
      */
     private Long boardId;
+
     /**
      * 유저의 고유번호입니다.
      */
     private Long userId;
+
     /**
      * 댓글의 내용입니다.
      */
     private String content;
+
     /**
      * 댓글의 좋아요 수입니다.
      */
     private Long likeCount;
+
     /**
      * 댓글의 삭제시간입니다.
      */
     private LocalDateTime deleteAt;
+
     /**
      * 댓글의 생성시간입니다.
      */
     private LocalDateTime createdAt;
+
     /**
      * 댓글의 수정시간입니다.
      */
