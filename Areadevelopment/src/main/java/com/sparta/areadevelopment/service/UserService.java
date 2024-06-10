@@ -5,11 +5,10 @@ import com.sparta.areadevelopment.dto.SignOutRequestDto;
 import com.sparta.areadevelopment.dto.SignupRequestDto;
 import com.sparta.areadevelopment.dto.UpdateUserDto;
 import com.sparta.areadevelopment.dto.UserInfoDto;
-import com.sparta.areadevelopment.enums.StatusEnum;
 import com.sparta.areadevelopment.entity.User;
+import com.sparta.areadevelopment.enums.StatusEnum;
 import com.sparta.areadevelopment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long userId, PasswordChangeRequestDto requestDto){
+    public void updatePassword(Long userId, PasswordChangeRequestDto requestDto) {
         User user = findUser(userId);
         checkPassword(user.getPassword(), requestDto.getOldPassword());
         user.updatePassword(passwordEncoder.encode(requestDto.getNewPassword()));
@@ -67,7 +66,7 @@ public class UserService {
 
     private User findUser(Long userId) {
         // userId를 통해서 user를 찾는다.
-        return userRepository.findUserByIdAndStatus(userId, StatusEnum.ACTIVE.getStat())
+        return userRepository.findUserByIdAndStatus(userId, StatusEnum.ACTIVE)
                 .orElseThrow(
                         () -> new IllegalArgumentException(
                                 "Failed to find comment with id," + userId)

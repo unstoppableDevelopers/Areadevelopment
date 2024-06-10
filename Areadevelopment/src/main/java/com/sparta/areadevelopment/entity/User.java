@@ -5,6 +5,8 @@ import com.sparta.areadevelopment.dto.UpdateUserDto;
 import com.sparta.areadevelopment.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,9 +49,12 @@ public class User extends Timestamped {
     private String email;
     private String info;
     @Column(nullable = false)
-    private String status = StatusEnum.ACTIVE.getStat();
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status = StatusEnum.ACTIVE;
 
     private String refreshToken;
+    //토큰 폐지
+    private boolean expired = false;
 
     public User() {
     }
@@ -77,9 +82,15 @@ public class User extends Timestamped {
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
-        this.status = StatusEnum.DELETED.getStat();
+        this.status = StatusEnum.DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
 
+    public void updateToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
+    public void setExpired(boolean b) {
+        this.expired = b;
+    }
 }
