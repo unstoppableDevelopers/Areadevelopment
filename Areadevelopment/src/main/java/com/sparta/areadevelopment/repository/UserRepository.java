@@ -6,16 +6,25 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
+/**
+ * 유저 레포지토리
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    /**
+     * 유저를 찾는 쿼리문
+     *
+     * @param username
+     * @return
+     */
     Optional<User> findByUsername(String username);
 
     Boolean existsByUsername(String username);
 
-    // 탈퇴 여부를 확인하고 User를 가져오는 쿼리문
     Optional<User> findUserByIdAndStatus(Long id, StatusEnum statusEnum);
 
     Optional<User> findByRefreshToken(String token);
 
     Optional<User> findUserByUsernameAndStatus(String username, StatusEnum statusEnum);
+
 }
