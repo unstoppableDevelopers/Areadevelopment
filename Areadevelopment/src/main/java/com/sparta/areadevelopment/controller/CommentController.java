@@ -3,11 +3,11 @@ package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.CommentService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,24 +17,47 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 이 Controller 게시글에 종속된 댓글의 요청을 받고 반환합니다.
+ */
 @RestController
 @RequestMapping("/api/boards")
 public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * 지정된 서비스로 비지니스 로직을 수행합니다.
+     *
+     * @param commentService 댓글기능에 대한 서비스 계층 객체입니다.
+     */
     private CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
-    //댓글 등록
+    /**
+     * 게시글 고유번호를 받아 해당하는 게시글에 종속되는 댓글을 작성합니다.
+     *
+     * @param userDetails 토큰 인증 통과후 시큐리티 컨텍스트에 저장된 유저의 정보
+     * @param boardId     게시글의 고유번호
+     * @param requestDto  댓글 내용
+     * @return 상태코드 200과 댓글 상세정보를 반환합니다.
+     */
     @PostMapping("/{boardId}/comments")
-    public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<CommentResponseDto> addComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long boardId, @RequestBody CommentRequestDto requestDto) {
-        return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
+        return ResponseEntity.ok().body(commentService.addComment(userDetails.getUser(), boardId,
+                requestDto));
     }
 
 
+    /**
+     * 게시글 하나에 종속된 모든 댓글을 조회하고 댓글이 없다면 댓글 작성 문구를 보여줍니다.
+     *
+     * @param boardId 게시글 고유번호
+     * @return 댓글의 작성 문구를 보여주거나 댓글의 내용을 보여줍니다.
+     */
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getAllComments(@PathVariable Long boardId) {
         List<CommentResponseDto> comments = commentService.getAllComments(boardId);
@@ -45,16 +68,34 @@ public class CommentController {
         }
     }
 
+    /**
+     * 게시글 하나에 종속된 하나의 특정 댓글의 사용자를 검증하여 일치하면 내용을 수정 합니다.
+     *
+     * @param userDetails 토큰 인증 통과후 시큐리티 컨텍스트에 저장된 유저의 정보
+     * @param commentId   댓글 고유번호
+     * @param requestDto  변경 요청 내용
+     * @return 수정완료된 댓글의 정보
+     */
     @PutMapping("/{boardId}/comments/{commentId}")
-    public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<CommentResponseDto> updateComment(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
-        return commentService.updateComment(userDetails.getUsername(), commentId, requestDto);
+        return ResponseEntity.ok()
+                .body(commentService.updateComment(userDetails.getUser().getId(), commentId,
+                        requestDto));
     }
 
-    @DeleteMapping("/{boardId}comments/{commentId}")
+    /**
+     * 게시글 하나에 종속된 하나의 특정 댓글의 사용자를 검증하여 일치하면 내용을 삭제 합니다.
+     *
+     * @param userDetails 토큰 인증 통과후 시큐리티 컨텍스트에 저장된 유저의 정보
+     * @param commentId   댓글 고유번호
+     * @return 댓글 삭제 완료 문구
+     */
+    @DeleteMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
-            @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long commentId) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUsername(), commentId));
+                commentService.deleteComment(userDetails.getUser().getId(), commentId));
     }
 }

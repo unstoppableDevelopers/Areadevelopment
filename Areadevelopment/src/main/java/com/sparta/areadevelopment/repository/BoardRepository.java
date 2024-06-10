@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
+
     Optional<Board> findByIdAndDeletedAtIsNull(Long id);
 
     //DeletedAt이 Not Null 인 경우 삭제된 게시글
