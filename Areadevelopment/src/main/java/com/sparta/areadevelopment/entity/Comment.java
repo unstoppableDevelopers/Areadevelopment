@@ -45,7 +45,6 @@ public class Comment extends Timestamped {
         this.likeCount = 0L;
         this.board = board;
         this.user = user;
-        user.addComments(this);
     }
 
     public void update(CommentRequestDto dto) {
@@ -54,5 +53,12 @@ public class Comment extends Timestamped {
 
     public void delete() {
         setDeletedAt(LocalDateTime.now());
+    }
+
+    public boolean isCommentAuthor(String username) {
+        if (this.user.getUsername().equals(username)) {
+            return true;
+        }
+        return false;
     }
 }

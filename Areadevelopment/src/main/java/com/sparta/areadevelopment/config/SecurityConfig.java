@@ -17,13 +17,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @ComponentScan(basePackages = "com.sparta.areadevelopment.jwt")
 public class SecurityConfig {
-   private final TokenProvider tokenProvider;
+
+    private final TokenProvider tokenProvider;
+
     //암호화
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -49,7 +52,8 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                         );
         http
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         http
                 .logout(auth -> auth
@@ -59,7 +63,7 @@ public class SecurityConfig {
                 );
         //세션 jwt를 통해 인증 인가를 위해 stateless 상태 설정
         http
-                .sessionManagement((session) ->session
+                .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.controller;
 
 
+import org.springframework.security.access.AccessDeniedException;
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
 import com.sparta.areadevelopment.service.CommentService;
@@ -27,11 +28,13 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    //댓글 등록
     @PostMapping("/{boardId}/comments")
     public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId, @RequestBody CommentRequestDto requestDto) {
         return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
     }
+
 
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getAllComments(@PathVariable Long boardId) {
@@ -43,18 +46,16 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/{boardId}/comments/{commentId}")
+    @PutMapping("/comments/{commentId}")
     public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Long boardId, @PathVariable Long commentId,
-            @RequestBody CommentRequestDto requestDto) {
-        return commentService.updateComment(userDetails.getUsername(), boardId, commentId,
-                requestDto);
+            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+        return commentService.updateComment(userDetails.getUsername(), commentId, requestDto);
     }
 
-    @DeleteMapping("/{boardId}/comments/{commentId}")
-    public ResponseEntity<String> deleteComment(@AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable Long boardId, @PathVariable Long commentId) {
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<String> deleteComment(
+            @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long commentId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUsername(), boardId, commentId));
+                commentService.deleteComment(userDetails.getUsername(), commentId));
     }
 }
