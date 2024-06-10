@@ -113,14 +113,17 @@ public class AuthService implements LogoutHandler {
         return ResponseEntity.ok(key);
     }
 
-    public ResponseEntity<String> checkMail(String token, String insertKey){
+    public ResponseEntity<String> checkMail(String key, String token, String insertKey){
         if(userRepository.findByRefreshToken(token).isPresent() && !userRepository.findByRefreshToken(token).get().getRefreshToken().equals(token)){
             new RuntimeException("잘못된 토큰입니다.");
         }
         String userEmail = userRepository.findByRefreshToken(token).get().getEmail();
         insertKey = SHA256Util.getEncrypt(insertKey, userEmail);
-
-        return null;
+        if (!key.equals(insertKey)){
+            return ResponseEntity.status(403).body("잘못된 키 입력입니다");
+        }
+        
+        return ResponseEntity.status(202).body("인증 완료");
     }
 }
 
