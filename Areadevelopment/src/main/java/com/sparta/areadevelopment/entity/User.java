@@ -10,11 +10,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -69,10 +66,11 @@ public class User extends Timestamped {
         this.info = info;
     }
 
+
     public void updateInfo(UpdateUserDto request) {
-        this.nickname = request.getNickname();
-        this.email = request.getEmail();
-        this.info = request.getInfo();
+        if(request.getNickname() != null) this.nickname = request.getNickname();
+        if(request.getEmail() != null) this.email = request.getEmail();
+        if(request.getInfo() != null) this.info = request.getInfo();
     }
 
     public void updatePassword(String password) {
