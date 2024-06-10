@@ -57,10 +57,10 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponseDto findById(Long boardId) {
+    public BoardResponseDto findBoard(Long boardId) {
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
+                () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
         );
 
         // 조회수 + 1
@@ -70,13 +70,13 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto update(String userName, BoardRequestDto requestDto, Long boardId) {
+    public BoardResponseDto updateBoard(String userName, BoardRequestDto requestDto, Long boardId) {
         User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
+                () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
         );
 
         // 같은 사용자만 수정 가능
@@ -90,14 +90,14 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponseDto delete(String userName, Long boardId) {
+    public BoardResponseDto deleteBoard(String userName, Long boardId) {
 
         User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
+                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
         );
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
+                () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
         );
 
         if (!Objects.equals(board.getUser().getId(), user.getId())) {

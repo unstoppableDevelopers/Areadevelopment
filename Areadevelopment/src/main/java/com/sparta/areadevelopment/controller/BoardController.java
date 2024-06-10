@@ -43,23 +43,23 @@ public class BoardController {
     }
 
     @GetMapping("/boards/{boardId}")
-    public BoardResponseDto findById(@PathVariable Long boardId) {
-        return boardService.findById(boardId);
+    public BoardResponseDto findBoard(@PathVariable Long boardId) {
+        return boardService.findBoard(boardId);
     }
 
     @PutMapping("/boards/{boardId}")
-    public BoardResponseDto update(
+    public BoardResponseDto updateBoard(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto,
             @PathVariable Long boardId) {
 
-        return boardService.update(userDetails.getUsername(), requestDto, boardId);
+        return boardService.updateBoard(userDetails.getUsername(), requestDto, boardId);
     }
 
     @DeleteMapping("/boards/{boardId}")
-    public BoardResponseDto delete(
+    public BoardResponseDto deleteBoard(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId) {
-        return boardService.delete(userDetails.getUsername(), boardId);
+        return boardService.deleteBoard(userDetails.getUsername(), boardId);
     }
 }
