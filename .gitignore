@@ -200,3 +200,9 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,windows,macos
+/.idea/modules/Areadevelopment.Areadevelopment.main.iml
+/Areadevelopment/build/tmp/compileJava/previous-compilation-data.bin
+/Areadevelopment/build/tmp/compileTestJava/previous-compilation-data.bin
+/.idea/inspectionProfiles/profiles_settings.xml
+/Areadevelopment/build/tmp/compileJava/compileTransaction/stash-dir/UserController.class.uniqueId0
+/Areadevelopment/build/tmp/compileJava/compileTransaction/stash-dir/UserService.class.uniqueId1
