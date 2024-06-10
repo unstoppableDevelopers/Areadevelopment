@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/boards")
 public class CommentController {
+
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     private final CommentService commentService;
 
@@ -53,7 +53,6 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.addComment(userDetails.getUser(), boardId,
                 requestDto));
     }
-
 
     /**
      * 게시글 하나에 종속된 모든 댓글을 조회하고 댓글이 없다면 댓글 작성 문구를 보여줍니다.

@@ -21,22 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *  DTO의 생성자 매서드
- *
+ * DTO의 생성자 매서드
  */
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
+
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     @Autowired
     private final UserService userService;
+
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     @PostMapping("/sign-up")
     public ResponseEntity signUp(
@@ -47,8 +46,7 @@ public class UserController {
     }
 
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     @GetMapping("/{userId}")
     public ResponseEntity getUser(
@@ -60,8 +58,7 @@ public class UserController {
     }
 
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     @PatchMapping("/{userId}")
     public ResponseEntity updateProfile(
@@ -73,9 +70,9 @@ public class UserController {
         return ResponseEntity.ok(
                 new CommonResponse<>(HttpStatus.OK.value(), "Success to update User : " + userId));
     }
+
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     // redirect status code 가 있다.
     @PutMapping("/{userId}/change-password")
@@ -87,8 +84,7 @@ public class UserController {
     }
 
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     @PostMapping("/{userId}/sign-out")
     public ResponseEntity<CommonResponse> signOut(

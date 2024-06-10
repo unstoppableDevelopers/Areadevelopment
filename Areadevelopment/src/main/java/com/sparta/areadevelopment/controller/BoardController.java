@@ -6,7 +6,6 @@ import com.sparta.areadevelopment.service.BoardService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.management.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 뉴스피드 컨트롤러
- * 조회를 제외하고는 모두 User의 정보가 필요하다.
+ * 뉴스피드 컨트롤러 조회를 제외하고는 모두 User의 정보가 필요하다.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -41,6 +39,7 @@ public class BoardController {
 
     /**
      * 보드 생성 controller
+     *
      * @param userDetails
      * @param requestDto
      * @return
@@ -54,6 +53,7 @@ public class BoardController {
 
     /**
      * 뉴스피드 내용 불러오기
+     *
      * @return
      * @throws ServiceNotFoundException
      */
@@ -107,6 +107,7 @@ public class BoardController {
 
     /**
      * 뉴스피드 수정
+     *
      * @param userDetails
      * @param requestDto
      * @param boardId
@@ -123,6 +124,7 @@ public class BoardController {
 
     /**
      * 뉴스피드 삭제
+     *
      * @param userDetails
      * @param boardId
      * @return
