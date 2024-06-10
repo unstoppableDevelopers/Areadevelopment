@@ -49,10 +49,8 @@ public class LikeService {
      * @return 좋아요 등록 : true 좋아요 취소 : false
      */
     @Transactional
-    public boolean toggleLike(String username, String contentType, Long contentId) {
+    public boolean toggleLike(User user, String contentType, Long contentId) {
         LikeTypeEnum likeType = LikeTypeEnum.fromContentType(contentType);
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
         Optional<Like> checkLike = likeRepository.findByUserIdAndContentIdAndContentType(
                 user.getId(), contentId, likeType);
         if (checkLike.isPresent()) {

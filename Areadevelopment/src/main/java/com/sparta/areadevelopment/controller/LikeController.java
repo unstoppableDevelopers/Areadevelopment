@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.controller;
 
 import com.sparta.areadevelopment.dto.LikeDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.service.LikeService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +39,10 @@ public class LikeController {
      */
     @PostMapping
     public ResponseEntity<String> likeContent(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody LikeDto likeDto) {
 
-        boolean isLiked = likeService.toggleLike(userDetails.getUsername(),
+        boolean isLiked = likeService.toggleLike(userDetails.getUser(),
                 likeDto.getContentType().toLowerCase(), likeDto.getContentId());
         if (isLiked) {
             return ResponseEntity.ok("좋아요 등록 성공");
