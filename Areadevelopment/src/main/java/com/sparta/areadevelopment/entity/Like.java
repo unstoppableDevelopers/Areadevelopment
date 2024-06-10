@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.entity;
 
+import com.sparta.areadevelopment.enums.LikeTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

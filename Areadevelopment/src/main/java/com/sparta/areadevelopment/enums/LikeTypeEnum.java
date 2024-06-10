@@ -1,4 +1,4 @@
-package com.sparta.areadevelopment.entity;
+package com.sparta.areadevelopment.enums;
 
 /**
  * 좋아요 기능 적용 타입 관리 클래스.

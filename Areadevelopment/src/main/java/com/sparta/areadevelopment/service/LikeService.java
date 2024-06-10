@@ -3,7 +3,7 @@ package com.sparta.areadevelopment.service;
 import com.sparta.areadevelopment.entity.Board;
 import com.sparta.areadevelopment.entity.Comment;
 import com.sparta.areadevelopment.entity.Like;
-import com.sparta.areadevelopment.entity.LikeTypeEnum;
+import com.sparta.areadevelopment.enums.LikeTypeEnum;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
 import com.sparta.areadevelopment.repository.CommentRepository;
