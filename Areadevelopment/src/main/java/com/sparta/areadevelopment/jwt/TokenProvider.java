@@ -3,6 +3,7 @@ package com.sparta.areadevelopment.jwt;
 import com.sparta.areadevelopment.dto.TokenDto;
 import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.enums.AuthEnum;
+import com.sparta.areadevelopment.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -24,6 +25,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -33,10 +35,12 @@ public class TokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;// 2주
     String token = AuthEnum.GRANT_TYPE.getValue();
     private final Key key;
+    private CustomUserDetailsService detailsService;
 
-    public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey) {
+    public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey , CustomUserDetailsService detailsService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.detailsService = detailsService;
     }
 
     /**
@@ -63,6 +67,7 @@ public class TokenProvider {
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(new Date(now))
+                .setSubject(authentication.getName())
                 .compact();
 
         log.info("accessToken: {}", accessToken);
@@ -71,27 +76,20 @@ public class TokenProvider {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+
+
     }
 
     /**
      * 토큰에서 유저 정보 추출
      */
-    public Authentication getAuthentication(String accessToken) {
-        Claims claims = parseClaims(accessToken);
-
-        if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
-        log.info("claims: {}", claims);
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-        log.info("authorities: {}", authorities);
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+    public Authentication getAuthentication(String token) {
+        String username = parseClaims(token).getSubject();
+        CustomUserDetails userDetails = detailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails,"", userDetails.getAuthorities());
     }
+
+
 
     /**
      * 토큰 정보 검증
@@ -116,12 +114,12 @@ public class TokenProvider {
         return false;
     }
 
-    private Claims parseClaims(String accessToken) {
+    private Claims parseClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
