@@ -2,6 +2,7 @@ package com.sparta.areadevelopment.service;
 
 import com.sparta.areadevelopment.config.MailManager;
 import com.sparta.areadevelopment.dto.TokenDto;
+import com.sparta.areadevelopment.entity.StatusEnum;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.enums.AuthEnum;
 import com.sparta.areadevelopment.jwt.TokenProvider;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
@@ -33,16 +35,19 @@ public class AuthService implements LogoutHandler {
 
     @Transactional
     public TokenDto login(String username, String password) {
-
+        if (!userRepository.existsByUsername(username)) {
+            throw new UsernameNotFoundException(username);
+        }
+        Optional<User> user = userRepository.findUserByUsernameAndStatus(username, StatusEnum.ACTIVE);
+        bCryptPasswordEncoder.matches(password, user.get().getPassword());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                username, password);
+                username,user.get().getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
 
-        Optional<User> user=userRepository.findByUsername(username);
         user.get().updateValue(tokenDto.getRefreshToken());
         user.get().setExpired(false);
         return tokenDto;
