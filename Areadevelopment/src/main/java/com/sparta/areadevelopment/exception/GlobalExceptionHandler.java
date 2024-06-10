@@ -8,6 +8,7 @@ import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(NullPointerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+
     // 게시글 없으면 status 200 ok
     @ExceptionHandler(ServiceNotFoundException.class)
     public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
@@ -78,6 +85,7 @@ public class GlobalExceptionHandler {
         }
         return dbErrorMessage; // 기본 메시지 반환
     }
+
 
 }
 

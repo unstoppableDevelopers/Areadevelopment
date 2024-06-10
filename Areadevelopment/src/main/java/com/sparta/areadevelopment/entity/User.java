@@ -31,13 +31,6 @@ public class User extends Timestamped {
     private Long id;
 
 
-    @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<Comment>();
-
-    public void addComments(Comment comment) {
-        comments.add(comment);
-    }
-
     @Column(unique = true, nullable = false)
     private String username;
     @Column(unique = true, nullable = false)

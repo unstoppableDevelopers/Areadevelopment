@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,13 +14,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @ComponentScan(basePackages = "com.sparta.areadevelopment.jwt")
 public class SecurityConfig {
-   private final TokenProvider tokenProvider;
+
+    private final TokenProvider tokenProvider;
+
     //암호화
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -39,16 +43,21 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable);
         //경로 별 인가
         http
-                .authorizeHttpRequests((auth) ->auth
-                                .requestMatchers("/auth/reissue","/**","/auth/login").permitAll()
-                                .anyRequest().authenticated()
-                        );
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/auth/reissue", "/api/users/sign-up", "/auth/login")
+                        .permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET, "/api/boards/{boardId}/comments"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                );
         http
-                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
 
         //세션 jwt를 통해 인증 인가를 위해 stateless 상태 설정
         http
-                .sessionManagement((session) ->session
+                .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

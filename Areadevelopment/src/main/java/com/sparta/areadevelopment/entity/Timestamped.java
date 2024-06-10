@@ -42,4 +42,12 @@ public abstract class Timestamped {
     protected void setDeletedAt(LocalDateTime now) {
         this.deletedAt = now;
     }
+
+    //
+    public boolean isDeleted() {
+        if (this.deletedAt != null) {
+            return true;
+        }
+        return false;
+    }
 }
