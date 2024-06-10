@@ -1,7 +1,6 @@
 package com.sparta.areadevelopment.controller;
 
 
-import org.springframework.security.access.AccessDeniedException;
 import com.sparta.areadevelopment.dto.CommentRequestDto;
 import com.sparta.areadevelopment.dto.CommentResponseDto;
 import com.sparta.areadevelopment.service.CommentService;
@@ -46,13 +45,13 @@ public class CommentController {
         }
     }
 
-    @PutMapping("/comments/{commentId}")
+    @PutMapping("/{boardId}/comments/{commentId}")
     public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
         return commentService.updateComment(userDetails.getUsername(), commentId, requestDto);
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{boardId}comments/{commentId}")
     public ResponseEntity<String> deleteComment(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long commentId) {
         return ResponseEntity.ok(
