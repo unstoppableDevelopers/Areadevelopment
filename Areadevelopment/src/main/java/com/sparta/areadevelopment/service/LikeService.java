@@ -10,7 +10,6 @@ import com.sparta.areadevelopment.repository.CommentRepository;
 import com.sparta.areadevelopment.repository.LikeRepository;
 import com.sparta.areadevelopment.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -50,31 +49,21 @@ public class LikeService {
      * @return 좋아요 등록 : true 좋아요 취소 : false
      */
     @Transactional
-    public boolean toggleLike(Long userId, String contentType, Long contentId) {
-
+    public boolean toggleLike(String username, String contentType, Long contentId) {
         LikeTypeEnum likeType = LikeTypeEnum.fromContentType(contentType);
-
-        Optional<Like> checkLike = likeRepository.findByUserIdAndContentIdAndContentType(userId,
-                contentId, likeType);
-
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        Optional<Like> checkLike = likeRepository.findByUserIdAndContentIdAndContentType(
+                user.getId(), contentId, likeType);
         if (checkLike.isPresent()) {
             likeRepository.delete(checkLike.get());
-
             decrementLikeCount(contentId, contentType);
-
             return false; // 좋아요 취소
         } else {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-
-            validateContentUser(userId, contentType, contentId);
-
+            validateContentUser(user.getId(), contentType, contentId);
             Like like = new Like(user, contentId, likeType);
-
             likeRepository.save(like);
-
             incrementLikeCount(contentId, contentType);
-
             return true; // 좋아요 등록
         }
     }
@@ -87,30 +76,30 @@ public class LikeService {
      * @param contentId   좋아요를 누른 컨텐츠의 고유 번호
      */
     private void validateContentUser(Long userId, String contentType, Long contentId) {
-        Optional<?> content;
 
+        Long likedUserId = null;
         // 객체를 가져옵니다
         if (LikeTypeEnum.BOARD.equalsType(contentType)) {
-            content = boardRepository.findById(contentId);
+            Board board = boardRepository.findById(contentId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당하는 일정이 없습니다."));
+            checkContentOwners(board.getUser().getId(), userId);
         } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) {
-            content = commentRepository.findById(contentId);
+            Comment comment = commentRepository.findById(contentId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당하는 일정이 없습니다."));
+            checkContentOwners(comment.getUser().getId(), userId);
         } else {
             throw new IllegalArgumentException("지원하지 않는 타입입니다.");
         }
+    }
 
-        Long likedUserId = null;
-
-        // 객체가 있을경우
-        if (content.isPresent()) {
-            Object innerContent = content.get();
-            if (innerContent instanceof Board) {
-                likedUserId = ((Board) innerContent).getUser().getId();
-            } else if (innerContent instanceof Comment) {
-                likedUserId = ((Comment) innerContent).getUser().getId();
-            }
-        }
-
-        if (Objects.equals(userId, likedUserId)) {
+    /**
+     * 사용자와 컨텐츠의 작성자를 비교하는 로직입니다.
+     *
+     * @param OwnerId 컨텐츠 작성자의 유저 고유번호입니다.
+     * @param userId  사용자의 유저 고유번호입니다.
+     */
+    private void checkContentOwners(Long OwnerId, Long userId) {
+        if (OwnerId.equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 컨텐츠에는 좋아요를 남길 수 없습니다.");
         }
     }
@@ -122,9 +111,9 @@ public class LikeService {
      * @param contentType 컨텐츠 타입
      */
     private void incrementLikeCount(Long contentId, String contentType) {
-        if (LikeTypeEnum.BOARD.equalsType(contentType)) {
+        if (LikeTypeEnum.BOARD.equalsType(contentType)) { // 게시판 일때
             boardRepository.incrementLikeCount(contentId);
-        } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) {
+        } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) { // 댓글 일때
             commentRepository.incrementLikeCount(contentId);
         } else {
             throw new IllegalArgumentException("지원하지 않는 타입입니다.");
@@ -138,9 +127,9 @@ public class LikeService {
      * @param contentType 컨텐츠 타입
      */
     private void decrementLikeCount(Long contentId, String contentType) {
-        if (LikeTypeEnum.BOARD.equalsType(contentType)) {
+        if (LikeTypeEnum.BOARD.equalsType(contentType)) { // 게시판 일때
             boardRepository.decrementLikeCount(contentId);
-        } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) {
+        } else if (LikeTypeEnum.COMMENT.equalsType(contentType)) { // 댓글 일때
             commentRepository.decrementLikeCount(contentId);
         } else {
             throw new IllegalArgumentException("지원하지 않는 타입입니다.");

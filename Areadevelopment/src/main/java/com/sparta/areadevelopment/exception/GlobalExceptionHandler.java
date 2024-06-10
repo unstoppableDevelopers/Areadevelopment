@@ -2,13 +2,16 @@ package com.sparta.areadevelopment.exception;
 
 
 import jakarta.transaction.NotSupportedException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -17,6 +20,24 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 // AOP
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * <p>컨트롤러에 @Valid 어노테이션으로 인한 입력받은 JSON 데이터를 RequestDto 로
+     * 바인딩하다가 발생한 오류들의 오류메시지들을 전부 출력해줍니다.</p>
+     *
+     * @param e 메서드의 인수가 올바르지 않을 때 발생하는 익셉션
+     * @return 오류메세지를 JSON 형식으로 반환해줍니다.
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
+        List<String> errors = new ArrayList<>();
+
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.add(error.getDefaultMessage());
+        }
+
+        return ResponseEntity.badRequest().body(errors);
+    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolations(
@@ -85,7 +106,6 @@ public class GlobalExceptionHandler {
         }
         return dbErrorMessage; // 기본 메시지 반환
     }
-
 
 }
 
