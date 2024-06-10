@@ -39,6 +39,10 @@ Content-Type: application/json
 POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("Authorization"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
+%}
 
 ### (1번) 유저 프로필 조회
 # 유저 고유번호 확인!
@@ -48,7 +52,7 @@ Authorization:{{Access-Token}}
 
 ### (1번) 유저 프로필 수정 (테스트용)
 # 유저 고유번호 확인!
-PUT http://localhost:8080/api/users/1
+PATCH http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
@@ -62,7 +66,7 @@ Content-Type: application/json
 
 ### (1번) 유저 프로필 수정 (원본으로)
 # 유저 고유번호 확인!
-PUT http://localhost:8080/api/users/1
+PATCH http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
@@ -73,6 +77,15 @@ Content-Type: application/json
   "info": "{{info}}"
 }
 
+### 유저 비밀번호 수정
+PUT http://localhost:8080/api/users/1/change-password
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "{{password}}",
+  "newPassword":"nada5011!@@#ASBA"
+}
 
 ### (현재) 유저 로그아웃
 POST http://localhost:8080/api/auth/logout
@@ -84,7 +97,7 @@ refresh-token:{{Refresh-Token}}
 # 유저 고유번호 확인!
 POST http://localhost:8080/api/users/1/sign-out
 Authorization:{{Access-Token}}
-refresh-token:{{Refresh-Token}}
+refresh-Token:{{Refresh-Token}}
 Content-Type: application/json
 
 {

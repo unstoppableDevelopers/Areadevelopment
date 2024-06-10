@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -20,24 +21,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 // AOP
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    /**
-     * <p>컨트롤러에 @Valid 어노테이션으로 인한 입력받은 JSON 데이터를 RequestDto 로
-     * 바인딩하다가 발생한 오류들의 오류메시지들을 전부 출력해줍니다.</p>
-     *
-     * @param e 메서드의 인수가 올바르지 않을 때 발생하는 익셉션
-     * @return 오류메세지를 JSON 형식으로 반환해줍니다.
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
-        List<String> errors = new ArrayList<>();
-
-        for (FieldError error : e.getBindingResult().getFieldErrors()) {
-            errors.add(error.getDefaultMessage());
-        }
-
-        return ResponseEntity.badRequest().body(errors);
-    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolations(
@@ -79,12 +62,6 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(NullPointerException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-
     // 게시글 없으면 status 200 ok
     @ExceptionHandler(ServiceNotFoundException.class)
     public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
@@ -97,6 +74,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 "The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.",
                 HttpStatus.BAD_REQUEST);
+    }
+
+    // 특정 필드가 입력되지 않았을 경우 메세지를 반환합니다.
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException e) {
+        List<String> errors = new ArrayList<>();
+
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.add(error.getDefaultMessage());
+        }
+
+        return ResponseEntity.badRequest().body(errors);
     }
 
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환

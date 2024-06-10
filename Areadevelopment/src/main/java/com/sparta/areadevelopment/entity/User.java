@@ -10,12 +10,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * @String status : 탈퇴 여부를 저장 합니다. -> "Active", "Deleted"
@@ -23,8 +24,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
-@NoArgsConstructor
 @Table(name = "users")
 public class User extends Timestamped {
 
@@ -32,6 +31,13 @@ public class User extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<Comment>();
+
+    public void addComments(Comment comment) {
+        comments.add(comment);
+    }
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -50,6 +56,9 @@ public class User extends Timestamped {
     //토큰 폐지
     private boolean expired = false;
 
+    public User() {
+    }
+
     // 암호화 한 password를 넣자
     @Builder
     public User(String username, String nickname, String password, String email,
@@ -61,21 +70,27 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-    public void updateProfile(UpdateUserDto user) {
-        this.nickname = user.getNickname();
-        this.email = user.getEmail();
-        this.info = user.getInfo();
-        this.password = user.getPassword();
+    public void updateInfo(UpdateUserDto request) {
+        this.nickname = request.getNickname();
+        this.email = request.getEmail();
+        this.info = request.getInfo();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
         this.status = StatusEnum.DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
-
     }
 
-    public void updateValue(String refreshToken) {
+    public void updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void setExpired(boolean b) {
+        this.expired = b;
     }
 }
