@@ -31,12 +31,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public BoardResponseDto createBoard(String username, BoardRequestDto requestDto) {
-
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("로그인 한 상태에서만 작성 할 수 있습니다.")
-        );
-
+    public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
         Board board = boardRepository.save(new Board(user, requestDto));
         return new BoardResponseDto(board);
     }
@@ -97,7 +92,7 @@ public class BoardService {
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         List<BoardResponseDto> list =
-                boardRepository.findAllByDeletedAtIsNullAndCreatedAtBetween
+                boardRepository.findAllByDeletedAtIsNullAndCreatedAtBetweenOrderByCreatedAtDesc
                                 (startDateTime, endDateTime, pageable)
                         .stream()
                         .map(BoardResponseDto::new).toList();
@@ -122,11 +117,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto updateBoard(String userName, BoardRequestDto requestDto, Long boardId) {
-        User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
-        );
-
+    public BoardResponseDto updateBoard(User user, BoardRequestDto requestDto, Long boardId) {
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
         );
@@ -142,11 +133,7 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponseDto deleteBoard(String userName, Long boardId) {
-
-        User user = userRepository.findByUsername(userName).orElseThrow(
-                () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
-        );
+    public BoardResponseDto deleteBoard(User user, Long boardId) {
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다.")
@@ -163,4 +150,3 @@ public class BoardService {
     }
 
 }
-
