@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 import javax.management.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -28,9 +31,9 @@ public class BoardController {
     // 조회를 제외하고는 모두 User의 정보가 필요하다.
     @PostMapping("/boards")
     public BoardResponseDto createBoard(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto) {
-        return boardService.createBoard(userDetails.getUser(), requestDto);
+        return boardService.createBoard(userDetails.getUsername(), requestDto);
     }
 
 
@@ -46,17 +49,17 @@ public class BoardController {
 
     @PutMapping("/boards/{boardId}")
     public BoardResponseDto update(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody BoardRequestDto requestDto,
             @PathVariable Long boardId) {
 
-        return boardService.update(userDetails.getUser(), requestDto, boardId);
+        return boardService.update(userDetails.getUsername(), requestDto, boardId);
     }
 
     @DeleteMapping("/boards/{boardId}")
     public BoardResponseDto delete(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long boardId) {
-        return boardService.delete(userDetails.getUser(), boardId);
+        return boardService.delete(userDetails.getUsername(), boardId);
     }
 }

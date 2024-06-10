@@ -5,6 +5,7 @@ import com.sparta.areadevelopment.dto.BoardResponseDto;
 import com.sparta.areadevelopment.entity.Board;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
+import com.sparta.areadevelopment.repository.UserRepository;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,15 +23,19 @@ public class BoardService {
 
     /**
      * 1. deletedAt = Null 인 경우에만 조회가 가능합니다. (삭제되는 순간 LocalDateTime.now()로 변경됩니다. 2.
+     *
      * @AuthenticationPrincipal을 통해 User 정보를 받아 온 후 검증합니다. 3. board와 User은 다:1 , board와 comment는 1:다
      * 관계로 맺어줬습니다.
      */
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
-    public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
-        if(user == null){
-            throw new IllegalArgumentException("로그인 한 상태에서만 작성 할 수 있습니다.");
-        }
+    public BoardResponseDto createBoard(String userName, BoardRequestDto requestDto) {
+
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("로그인 한 상태에서만 작성 할 수 있습니다.")
+        );
+
         Board board = boardRepository.save(new Board(user, requestDto));
         return new BoardResponseDto(board);
     }
@@ -65,7 +70,11 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto update(User user, BoardRequestDto requestDto, Long boardId) {
+    public BoardResponseDto update(String userName, BoardRequestDto requestDto, Long boardId) {
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 요청입니다.")
+        );
+
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 요청입니다.")
         );
@@ -81,7 +90,11 @@ public class BoardService {
 
 
     @Transactional
-    public BoardResponseDto delete(User user, Long boardId) {
+    public BoardResponseDto delete(String userName, Long boardId) {
+
+        User user = userRepository.findByUsername(userName).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 요청입니다.")
+        );
 
         Board board = boardRepository.findByIdAndDeletedAtIsNull(boardId).orElseThrow(
                 () -> new IllegalArgumentException("잘못된 요청입니다.")
