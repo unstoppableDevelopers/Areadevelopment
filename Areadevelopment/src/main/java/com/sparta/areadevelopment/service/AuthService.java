@@ -43,7 +43,7 @@ public class AuthService implements LogoutHandler {
         Optional<User> user = userRepository.findUserByUsernameAndStatus(username, StatusEnum.ACTIVE);
         bCryptPasswordEncoder.matches(password, user.get().getPassword());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                username,user.get().getPassword());
+                username,password);
 
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
@@ -70,20 +70,11 @@ public class AuthService implements LogoutHandler {
         }else if(user.get().isExpired()){
             throw new RuntimeException("폐지된 토큰입니다.");
         }
-//        String resolveToken = resolveToken(user.get().getRefreshToken());
-        String username = user.get().getUsername();
-        String password = user.get().getPassword();
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                username, password);
-        Authentication authentication =  authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
 
-//        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져옴
-//        User originRefreshToken = userRepository.findByUsername(authentication.getName())
-//                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
-//        if (!originRefreshToken.getRefreshToken().equals(refreshToken)) {
-//            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-//        }
+        Authentication authentication = tokenProvider.getAuthentication(refreshToken.substring(7));
+//        String resolveToken = resolveToken(user.get().getRefreshToken());
+
+
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
         user.get().updateValue(tokenDto.getRefreshToken());
 

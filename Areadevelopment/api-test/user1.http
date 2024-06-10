@@ -39,6 +39,10 @@ Content-Type: application/json
 POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("Authorization"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
+%}
 
 ### (1번) 유저 프로필 조회
 # 유저 고유번호 확인!
@@ -84,7 +88,7 @@ refresh-token:{{Refresh-Token}}
 # 유저 고유번호 확인!
 POST http://localhost:8080/api/users/1/sign-out
 Authorization:{{Access-Token}}
-refresh-token:{{Refresh-Token}}
+refresh-Token:{{Refresh-Token}}
 Content-Type: application/json
 
 {
