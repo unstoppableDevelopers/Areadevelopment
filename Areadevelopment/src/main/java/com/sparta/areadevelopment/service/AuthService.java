@@ -48,6 +48,8 @@ public class AuthService implements LogoutHandler {
         Optional<User> user = userRepository.findByRefreshToken(refreshToken);
         if(user!=null && !user.get().getRefreshToken().equals(refreshToken)){
             throw new RuntimeException("잘못된 토큰입니다.");
+        }else if(user.get().isExpired()){
+            throw new RuntimeException("폐지된 토큰입니다.");
         }
 //        String resolveToken = resolveToken(user.get().getRefreshToken());
         String username = user.get().getUsername();
