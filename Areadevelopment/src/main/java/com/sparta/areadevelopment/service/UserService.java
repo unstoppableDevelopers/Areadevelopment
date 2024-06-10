@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class UserService {
         User user = new User(
                 requestDto.getUsername(),
                 requestDto.getNickname(),
-                requestDto.getPassword(), // 여기서 암호화 한 부분을 넣습니다.
+                bCryptPasswordEncoder.encode(requestDto.getPassword()), // 여기서 암호화 한 부분을 넣습니다.
                 requestDto.getEmail(),
                 requestDto.getInfo()
         );

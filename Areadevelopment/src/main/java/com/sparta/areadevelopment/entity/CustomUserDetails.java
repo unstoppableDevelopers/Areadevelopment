@@ -3,20 +3,27 @@ package com.sparta.areadevelopment.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+
 @Getter
 public class CustomUserDetails implements UserDetails {
-        private User user;
-//    private String email; 이메일
-//    private boolean emailVerified;   이메일 인증 여부
-//    private Collection<? extends GrantedAuthority> authorities;
+    private final User user;
+    private final String username;
+    private final String password;
+    private String email; //이메일
+    private boolean emailVerified; //  이메일 인증 여부
+    private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(User user,  String username,  String password) {
         this.user = user;
+        this.username = username;
+        this.password = password;
     }
-
 //    /**
 //     * 해당 유저의 권한 목록
 //     */

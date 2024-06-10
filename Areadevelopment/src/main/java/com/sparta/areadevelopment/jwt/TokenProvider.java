@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.jwt;
 
 import com.sparta.areadevelopment.dto.TokenDto;
+import com.sparta.areadevelopment.entity.CustomUserDetails;
 import com.sparta.areadevelopment.enums.AuthEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
