@@ -39,7 +39,5 @@ public class SignupRequestDto {
      * @String info 한줄 소개
      */
     private String info;
-
-//    private String authority;
 }
 

@@ -13,31 +13,25 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class TokenProvider {
+
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;// 2주
     String token = AuthEnum.GRANT_TYPE.getValue();
     private final Key key;
     private CustomUserDetailsService detailsService;
 
-    public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey , CustomUserDetailsService detailsService) {
+    public TokenProvider(@Value("${JWT_SECRET_KEY}") String secretKey,
+            CustomUserDetailsService detailsService) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.detailsService = detailsService;
@@ -86,9 +80,9 @@ public class TokenProvider {
     public Authentication getAuthentication(String token) {
         String username = parseClaims(token).getSubject();
         CustomUserDetails userDetails = detailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails,"", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "",
+                userDetails.getAuthorities());
     }
-
 
 
     /**

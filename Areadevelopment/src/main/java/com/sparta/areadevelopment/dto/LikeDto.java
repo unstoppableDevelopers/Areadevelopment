@@ -1,6 +1,7 @@
 package com.sparta.areadevelopment.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
@@ -13,14 +14,13 @@ public class LikeDto {
     /**
      * 컨텐츠의 고유번호입니다.
      */
-    @NotBlank
-    @Pattern(regexp = "\\d+", message = "숫자만 입력 가능합니다.")
+    @NotNull(message = "Content ID는 필수입니다.")
     private Long contentId;
 
     /**
      * 컨텐츠의 타입입니다.
      */
-    @NotBlank
+    @NotBlank(message = "Content Type 은 필수입니다.")
     @Pattern(regexp = "[a-zA-Z]+", message = "영어만 입력 가능합니다.")
     private String contentType;
 }

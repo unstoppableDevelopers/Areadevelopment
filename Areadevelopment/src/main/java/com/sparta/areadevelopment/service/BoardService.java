@@ -30,9 +30,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public BoardResponseDto createBoard(String userName, BoardRequestDto requestDto) {
+    public BoardResponseDto createBoard(String username, BoardRequestDto requestDto) {
 
-        User user = userRepository.findByUsername(userName).orElseThrow(
+        User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalArgumentException("로그인 한 상태에서만 작성 할 수 있습니다.")
         );
 

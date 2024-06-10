@@ -41,6 +41,12 @@ POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
 
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("Authorization"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
+%}
+
+
 ### (2번) 유저 프로필 조회
 # 유저 고유번호 확인!
 GET http://localhost:8080/api/users/2

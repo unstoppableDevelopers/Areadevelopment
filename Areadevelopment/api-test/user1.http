@@ -39,10 +39,12 @@ Content-Type: application/json
 POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
+
 > {%
   client.global.set("Access-Token", response.headers.valueOf("Authorization"));
   client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
 %}
+
 
 ### (1번) 유저 프로필 조회
 # 유저 고유번호 확인!
@@ -86,6 +88,18 @@ Content-Type: application/json
   "oldPassword": "{{password}}",
   "newPassword":"nada5011!@@#ASBA"
 }
+
+
+### 유저 비밀번호 수정 (원본으로)
+PUT http://localhost:8080/api/users/1/change-password
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "nada5011!@@#ASBA",
+  "newPassword":"{{password}}"
+}
+
 
 ### (현재) 유저 로그아웃
 POST http://localhost:8080/api/auth/logout
@@ -163,11 +177,9 @@ GET http://localhost:8080/api/boards/1/comments
 PUT http://localhost:8080/api/boards/1/comments/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
-
 {
   "content": "댓글 내용 수정"
 }
-
 
 ### (1번 게시글의 1번 댓글 삭제) 댓글 삭제
 # 게시글 고유번호, 댓글 고유번호 확인!
@@ -176,14 +188,27 @@ Authorization:{{Access-Token}}
 
 ### 유저 이메일 인증
 POST http://localhost:8080/api/auth/send-mail
+Content-Type: application/json
 Authorization:{{Access-Token}}
-
 
 ### 유저 이메일 인증
 POST http://localhost:8080/api/auth/check-mail
-Authorization:{{Access-Token}}
 Content-Type: application/json
-
+Authorization:{{Access-Token}}
 {
   "key":"e318b8d"
 }
+
+### (1번 게시글) 좋아요 등록 삭제
+#타입이랑 고유번호 확인!
+POST http://localhost:8080/api/likes
+Authorization:{{Access-Token}}
+Content-Type: application/json
+{
+  "contentId": 3,
+  "contentType": "board"
+}
+
+
+
+

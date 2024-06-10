@@ -101,7 +101,8 @@ public class SecurityConfig {
                 .logout(auth -> auth
                         .logoutUrl("/api/auth/logout")
                         .addLogoutHandler(authService)
-                        .logoutSuccessHandler((((request,response,authentication) -> SecurityContextHolder.clearContext())))
+                        .logoutSuccessHandler(
+                                (((request, response, authentication) -> SecurityContextHolder.clearContext())))
                 );
         /**
          * jwt를 통해 인증 인가를 할 것이기 때문에 stateless로 상태 설정
