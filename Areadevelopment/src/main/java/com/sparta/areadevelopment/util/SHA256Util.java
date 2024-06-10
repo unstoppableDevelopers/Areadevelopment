@@ -6,6 +6,9 @@ import java.util.Random;
 
 public class SHA256Util {
 
+    private SHA256Util() {
+
+    }
     public static String getEncrypt(String source, String salt) {
         return getEncrypt(source, salt.getBytes());
     }

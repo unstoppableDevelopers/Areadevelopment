@@ -26,7 +26,7 @@ public class UserService {
         User user = new User(
                 requestDto.getUsername(),
                 requestDto.getNickname(),
-                requestDto.getPassword(), // 여기서 암호화 한 부분을 넣습니다.
+                bCryptPasswordEncoder.encode(requestDto.getPassword()), // 여기서 암호화 한 부분을 넣습니다.
                 requestDto.getEmail(),
                 requestDto.getInfo()
         );

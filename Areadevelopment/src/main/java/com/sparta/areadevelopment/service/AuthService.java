@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -45,8 +47,14 @@ public class AuthService implements LogoutHandler {
 
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
-
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
+        // 인증 객체 생성 및 등록
+
+
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
 
         user.get().updateValue(tokenDto.getRefreshToken());
         user.get().setExpired(false);

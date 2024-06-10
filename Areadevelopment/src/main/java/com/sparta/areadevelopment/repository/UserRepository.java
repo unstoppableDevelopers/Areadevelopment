@@ -12,6 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
     Boolean existsByUsername(String username);
     Optional<User> findByRefreshToken(String token);
-    @Query("SELECT u FROM User u WHERE u.id = :id AND u.status = :status")
     Optional<User> findUserByUsernameAndStatus(String username, StatusEnum statusEnum);
 }
