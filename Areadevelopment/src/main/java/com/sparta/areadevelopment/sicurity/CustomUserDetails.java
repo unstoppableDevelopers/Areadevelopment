@@ -1,18 +1,16 @@
-package com.sparta.areadevelopment.sicurity;
+package com.sparta.areadevelopment.entity;
 
-import com.sparta.areadevelopment.entity.User;
+import java.util.ArrayList;
 import java.util.Collection;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-    private User user;
-//    private String email; 이메일
-//    private boolean emailVerified;   이메일 인증 여부
-//    private Collection<? extends GrantedAuthority> authorities;
+    private final User user;
 
     public CustomUserDetails(User user) {
         this.user = user;
@@ -23,7 +21,9 @@ public class CustomUserDetails implements UserDetails {
 //     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        authorities.add(() -> "ROLE_USER");
+        return authorities;
     }
 
     /**

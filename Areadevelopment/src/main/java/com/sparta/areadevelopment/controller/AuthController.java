@@ -53,12 +53,14 @@ public class AuthController {
     }
 
     @PostMapping("/send-mail")
-    public ResponseEntity<String> sendMail(HttpServletRequest request){
+    public ResponseEntity<String> sendMail(HttpServletRequest request) {
         String refreshToken = request.getHeader("refresh-token");
         return authService.sendMail(refreshToken);
     }
+
     @PostMapping("/check-mail")
-    public ResponseEntity<String> checkMail( HttpServletRequest request,@RequestBody String insertKey){
+    public ResponseEntity<String> checkMail(HttpServletRequest request,
+            @RequestBody String insertKey) {
         String refreshToken = request.getHeader("refresh-token");
         return authService.checkMail(refreshToken, insertKey);
     }
