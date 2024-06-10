@@ -1,5 +1,4 @@
 package com.sparta.areadevelopment.service;
-
 import com.sparta.areadevelopment.config.MailManager;
 import com.sparta.areadevelopment.dto.TokenDto;
 import com.sparta.areadevelopment.entity.User;
@@ -13,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,44 +25,60 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 로그인 인증 관련 서비스
+ */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService implements LogoutHandler {
+
+    /**
+     * 관련 클래스 호출
+     */
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MailManager mailManager;
+    private static String magickey="";
 
+    /**
+     * 로그인 메서드
+     * @param username
+     * @param password
+     * @return
+     */
     @Transactional
     public TokenDto login(String username, String password) {
         if (!userRepository.existsByUsername(username)) {
             throw new UsernameNotFoundException(username);
         }
         Optional<User> user = userRepository.findUserByUsernameAndStatus(username, StatusEnum.ACTIVE);
+
         bCryptPasswordEncoder.matches(password, user.get().getPassword());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 username,password);
+        user.get().setExpired(false);
 
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
-        // 인증 객체 생성 및 등록
-
-
         context.setAuthentication(authentication);
-
         SecurityContextHolder.setContext(context);
-
         user.get().updateToken(tokenDto.getRefreshToken());
-        user.get().setExpired(false);
+
         return tokenDto;
     }
 
+    /**
+     * 토큰 재발급 메서드
+     * @param refreshToken
+     * @return
+     */
     @Transactional
-    // Access Token 리프레시
     public TokenDto reissue(String refreshToken) {
         Optional<User> user = userRepository.findByRefreshToken(refreshToken);
         if(user!=null && !user.get().getRefreshToken().equals(refreshToken)){
@@ -70,17 +86,18 @@ public class AuthService implements LogoutHandler {
         }else if(user.get().isExpired()){
             throw new RuntimeException("폐지된 토큰입니다.");
         }
-
         Authentication authentication = tokenProvider.getAuthentication(refreshToken.substring(7));
-//        String resolveToken = resolveToken(user.get().getRefreshToken());
-
-
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
         user.get().updateToken(tokenDto.getRefreshToken());
-
         return tokenDto;
     }
 
+    /**
+     * 로그아웃 메서드
+     * @param request
+     * @param response
+     * @param authentication
+     */
     @Transactional
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response , Authentication authentication) {
@@ -92,37 +109,36 @@ public class AuthService implements LogoutHandler {
         String accessToken = authHeader.substring(7);
         String username = tokenProvider.getUsername(accessToken);
         User refreshToken = userRepository.findByUsername(username).orElse(null);
-
         refreshToken.setExpired(true);
-
     }
 
-    public ResponseEntity<String> sendMail(String token){
-        String userEmail = userRepository.findByRefreshToken(token).get().getEmail();
-
+    /**
+     * 메일 전송 메서드
+     * @param email
+     * @return
+     */
+    public ResponseEntity<String> sendMail(String email){
         UUID uuid = UUID.randomUUID();
         String key = uuid.toString().substring(0,7);
         String sub = "인증번호 메일 전송";
-        String con = "인증번호 : " + key;
-        try {
-            mailManager.send(userEmail,sub,con);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        key = SHA256Util.getEncrypt(key, userEmail);
+        String content = "인증번호 : " + key;
+        mailManager.send(email, sub, content);
+        magickey = SHA256Util.getEncrypt(key, email);
+        log.info(magickey);
         return ResponseEntity.ok(key);
     }
 
-    public ResponseEntity<String> checkMail(String key, String token, String insertKey){
-        if(userRepository.findByRefreshToken(token).isPresent() && !userRepository.findByRefreshToken(token).get().getRefreshToken().equals(token)){
-            new RuntimeException("잘못된 토큰입니다.");
-        }
-        String userEmail = userRepository.findByRefreshToken(token).get().getEmail();
-        insertKey = SHA256Util.getEncrypt(insertKey, userEmail);
-        if (!key.equals(insertKey)){
+    /**
+     * 메일 인증 코드 검증 메서드
+     * @param key
+     * @param email
+     * @return
+     */
+    public ResponseEntity<String> checkMail(String key, String email){
+        String insertKey = SHA256Util.getEncrypt(key, email);
+        if (!magickey.equals(insertKey)){
             return ResponseEntity.status(403).body("잘못된 키 입력입니다");
         }
-        
         return ResponseEntity.status(202).body("인증 완료");
     }
 }

@@ -23,15 +23,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 뉴스피드 컨트롤러
+ * 조회를 제외하고는 모두 User의 정보가 필요하다.
+ */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class BoardController {
 
+    /**
+     * 보드 서비스
+     */
     private final BoardService boardService;
 
-    // 조회를 제외하고는 모두 User의 정보가 필요하다.
+
+    /**
+     * 보드 생성 controller
+     * @param userDetails
+     * @param requestDto
+     * @return
+     */
     @PostMapping("/boards")
     public BoardResponseDto createBoard(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -39,7 +52,11 @@ public class BoardController {
         return boardService.createBoard(userDetails.getUsername(), requestDto);
     }
 
-
+    /**
+     * 뉴스피드 내용 불러오기
+     * @return
+     * @throws ServiceNotFoundException
+     */
     @GetMapping("/boards")
     public List<BoardResponseDto> findAll() throws ServiceNotFoundException {
         return boardService.findAll();
@@ -82,11 +99,19 @@ public class BoardController {
         return boardService.findAllDatePagination(page - 1, startDateTime, endDateTime);
     }
 
+
     @GetMapping("/boards/{boardId}")
     public BoardResponseDto findBoard(@PathVariable Long boardId) {
         return boardService.findBoard(boardId);
     }
 
+    /**
+     * 뉴스피드 수정
+     * @param userDetails
+     * @param requestDto
+     * @param boardId
+     * @return
+     */
     @PutMapping("/boards/{boardId}")
     public BoardResponseDto updateBoard(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -96,6 +121,12 @@ public class BoardController {
         return boardService.updateBoard(userDetails.getUsername(), requestDto, boardId);
     }
 
+    /**
+     * 뉴스피드 삭제
+     * @param userDetails
+     * @param boardId
+     * @return
+     */
     @DeleteMapping("/boards/{boardId}")
     public BoardResponseDto deleteBoard(
             @AuthenticationPrincipal UserDetails userDetails,

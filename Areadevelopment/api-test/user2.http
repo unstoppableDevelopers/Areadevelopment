@@ -41,6 +41,12 @@ POST http://localhost:8080/api/auth/reissue
 refresh-token:{{Refresh-Token}}
 
 
+> {%
+  client.global.set("Access-Token", response.headers.valueOf("Authorization"));
+  client.global.set("Refresh-Token", response.headers.valueOf("refresh-token"));
+%}
+
+
 ### (2번) 유저 프로필 조회
 # 유저 고유번호 확인!
 GET http://localhost:8080/api/users/2
@@ -49,21 +55,17 @@ Authorization:{{Access-Token}}
 
 ### (2번) 유저 프로필 수정 (테스트용)
 # 유저 고유번호 확인!
-PUT http://localhost:8080/api/users/2
+PATCH http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
 {
-  "nickname": "수정된 닉네임2",
-  "password": "{{password}}",
-  "email": "modify2@email.com",
-  "info": "영역전개2!"
+  "password": "{{password}}"
 }
-
 
 ### (2번) 유저 프로필 수정 (원본으로)
 # 유저 고유번호 확인!
-PUT http://localhost:8080/api/users/2
+PATCH http://localhost:8080/api/users/1
 Authorization:{{Access-Token}}
 Content-Type: application/json
 
@@ -75,6 +77,19 @@ Content-Type: application/json
 }
 
 
+### $2a$10$Ia8bhwaG2KAqSpffv/TG0u/SQJP8UlZvVI9k4WmuMQ6C3uGGoSWT6
+
+### 유저 비밀번호 수정
+PUT http://localhost:8080/api/users/1/change-password
+Authorization:{{Access-Token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "{{password}}",
+  "newPassword":"nada5011!@@#ASBA"
+}
+
+
 ### (현재) 유저 로그아웃
 POST http://localhost:8080/api/auth/logout
 Authorization:{{Access-Token}}
@@ -83,7 +98,7 @@ refresh-token:{{Refresh-Token}}
 
 ### (2번) 유저 회원탈퇴
 # 유저 고유번호 확인!
-POST http://localhost:8080/api/users/2/sign-out
+POST http://localhost:8080/api/users/1/sign-out
 Authorization:{{Access-Token}}
 refresh-token:{{Refresh-Token}}
 Content-Type: application/json
