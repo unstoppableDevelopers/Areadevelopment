@@ -17,17 +17,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ *  DTO의 생성자 매서드
+ *
+ */
 @RestController
 @RequestMapping("/api/boards")
 public class CommentController {
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     private final CommentService commentService;
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     private CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     //댓글 등록
     @PostMapping("/{boardId}/comments")
     public CommentResponseDto addComment(@AuthenticationPrincipal UserDetails userDetails,
@@ -35,7 +47,10 @@ public class CommentController {
         return commentService.addComment(userDetails.getUsername(), boardId, requestDto);
     }
 
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getAllComments(@PathVariable Long boardId) {
         List<CommentResponseDto> comments = commentService.getAllComments(boardId);
@@ -45,13 +60,19 @@ public class CommentController {
             return ResponseEntity.ok(comments);
         }
     }
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @PutMapping("/comments/{commentId}")
     public CommentResponseDto updateComment(@AuthenticationPrincipal UserDetails userDetails,
             @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
         return commentService.updateComment(userDetails.getUsername(), commentId, requestDto);
     }
-
+    /**
+     *  DTO의 생성자 매서드
+     *
+     */
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
             @AuthenticationPrincipal UserDetails userDetails, @PathVariable Long commentId) {
