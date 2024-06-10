@@ -65,16 +65,10 @@ public class User extends Timestamped {
         this.info = info;
     }
 
-    public void updateInfo(UpdateUserDto updateUserDto) {
-        if (updateUserDto.getNickname() != null) {
-            this.nickname = updateUserDto.getNickname();
-        }
-        if (updateUserDto.getEmail() != null) {
-            this.email = updateUserDto.getEmail();
-        }
-        if (updateUserDto.getInfo() != null) {
-            this.info = updateUserDto.getInfo();
-        }
+    public void updateInfo(UpdateUserDto request) {
+        this.nickname = request.getNickname();
+        this.email = request.getEmail();
+        this.info = request.getInfo();
     }
 
     public void updatePassword(String password) {
@@ -86,4 +80,6 @@ public class User extends Timestamped {
         this.status = StatusEnum.DELETED.getStat();
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
+
+
 }

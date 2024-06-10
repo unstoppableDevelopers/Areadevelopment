@@ -1,5 +1,6 @@
 package com.sparta.areadevelopment.service;
 
+import com.sparta.areadevelopment.dto.PasswordChangeRequestDto;
 import com.sparta.areadevelopment.dto.SignOutRequestDto;
 import com.sparta.areadevelopment.dto.SignupRequestDto;
 import com.sparta.areadevelopment.dto.UpdateUserDto;
@@ -34,26 +35,23 @@ public class UserService {
         // 특정 유저 있는 지 확인
         User user = findUser(userId);
 
-        return new UserInfoDto(user.getId(), user.getNickname(),
+        return new UserInfoDto(user.getUsername(), user.getNickname(),
                 user.getInfo(), user.getEmail());
     }
 
-
     @Transactional
     public void updateProfile(Long userId, UpdateUserDto requestDto) {
-        // 유저 ID 있나 확인
         User user = findUser(userId);
-
-        // password 검증 후 변경 여부 결정
-        if (!passwordEncoder.matches(user.getPassword(), requestDto.getPassword())) {
-            // password 변경 -> 다른 경우
-            user.updatePassword(requestDto.getPassword());
-        }
-
-        // password 외 입력된 값에 대하여 변경
+        checkPassword(user.getPassword(), requestDto.getPassword());
         user.updateInfo(requestDto);
     }
 
+    @Transactional
+    public void updatePassword(Long userId, PasswordChangeRequestDto requestDto){
+        User user = findUser(userId);
+        checkPassword(user.getPassword(), requestDto.getOldPassword());
+        user.updatePassword(passwordEncoder.encode(requestDto.getNewPassword()));
+    }
 
     // 이 부분은 토큰이 필요한 부분이다.
     @Transactional
