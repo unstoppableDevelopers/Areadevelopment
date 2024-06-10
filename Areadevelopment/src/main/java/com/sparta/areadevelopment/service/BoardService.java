@@ -92,7 +92,7 @@ public class BoardService {
         int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize);
         List<BoardResponseDto> list =
-                boardRepository.findAllByDeletedAtIsNullAndCreatedAtBetween
+                boardRepository.findAllByDeletedAtIsNullAndCreatedAtBetweenOrderByCreatedAtDesc
                                 (startDateTime, endDateTime, pageable)
                         .stream()
                         .map(BoardResponseDto::new).toList();
