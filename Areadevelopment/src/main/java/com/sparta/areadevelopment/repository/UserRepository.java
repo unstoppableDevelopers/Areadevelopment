@@ -21,10 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByUsername(String username);
 
-    Optional<User> findUserByIdAndStatus(Long id, StatusEnum statusEnum);
-
     Optional<User> findByRefreshToken(String token);
 
     Optional<User> findUserByUsernameAndStatus(String username, StatusEnum statusEnum);
-
 }

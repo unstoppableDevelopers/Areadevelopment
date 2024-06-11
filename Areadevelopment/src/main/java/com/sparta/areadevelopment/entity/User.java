@@ -1,22 +1,19 @@
 package com.sparta.areadevelopment.entity;
 
 
+import static com.sparta.areadevelopment.enums.StatusEnum.DELETED;
+
 import com.sparta.areadevelopment.dto.UpdateUserDto;
 import com.sparta.areadevelopment.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
-import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -87,16 +84,16 @@ public class User extends Timestamped {
 
     // service 에서 탈퇴를 할 때 해당 메서드를 이용한다.
     public void softDelete() {
-        this.status = StatusEnum.DELETED;
+        this.status = DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
+    }
+
+    public void verifiStatus(){
+        this.status = StatusEnum.VERYFICATION;
     }
 
     public void updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    public boolean getExpired(){
-        return this.expired;
     }
 
     public void setExpired(boolean b) {
