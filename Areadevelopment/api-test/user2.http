@@ -105,7 +105,7 @@ refresh-token:{{Refresh-Token}}
 
 ### (2번) 유저 회원탈퇴
 # 유저 고유번호 확인!
-POST http://localhost:8080/api/users/1/sign-out
+POST http://localhost:8080/api/users/2/sign-out
 Authorization:{{Access-Token}}
 refresh-token:{{Refresh-Token}}
 Content-Type: application/json

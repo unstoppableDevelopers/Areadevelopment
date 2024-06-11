@@ -64,7 +64,6 @@ public class UserService {
     }
 
     // 이 부분은 토큰이 필요한 부분이다.
-    @Transactional
     public void signOut(Long userId, SignOutRequestDto requestDto, User user) {
         getUserDetails(userId, user);
         checkPassword(user.getPassword(), requestDto.getPassword());
@@ -74,8 +73,9 @@ public class UserService {
             board.setDeletedAt(LocalDateTime.now());
             board.getComments().forEach(Comment::delete); // 각 게시물의 댓글도 소프트 딜리트
         });
-        user.softDelete();
         user.setExpired(true); // 회원 탈퇴시 true로 더 이상 다른 로직이 불가하게 만듭니다.
+        user.softDelete();
+        userRepository.save(user);
     }
 
     private void checkPassword(String encryptedPassword, String rawPassword) {

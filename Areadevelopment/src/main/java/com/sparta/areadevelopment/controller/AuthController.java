@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,7 +103,7 @@ public class AuthController {
      * @param customUserDetails 유저 이메일
      * @return 200ok
      */
-    @PostMapping("/check-mail")
+    @PutMapping("/check-mail")
     public ResponseEntity<String> checkMail(@RequestBody KeyDto key,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 

@@ -135,6 +135,7 @@ public class AuthService implements LogoutHandler {
      * @param email
      * @return
      */
+    @Transactional
     public ResponseEntity<String> checkMail(String key, String email){
         String insertKey = SHA256Util.getEncrypt(key, email);
         if (!magickey.equals(insertKey)){
