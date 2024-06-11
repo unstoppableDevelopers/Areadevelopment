@@ -81,10 +81,11 @@ public class CommentController {
     @PutMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto,
+            @PathVariable Long boardId) {
         return ResponseEntity.ok()
                 .body(commentService.updateComment(userDetails.getUser().getId(), commentId,
-                        requestDto));
+                        requestDto, boardId));
     }
 
     /**
@@ -96,8 +97,9 @@ public class CommentController {
      */
     @DeleteMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
-            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId,
+            @PathVariable Long boardId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUser().getId(), commentId));
+                commentService.deleteComment(userDetails.getUser().getId(), commentId, boardId));
     }
 }
