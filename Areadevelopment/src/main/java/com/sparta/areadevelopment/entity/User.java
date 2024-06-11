@@ -84,7 +84,9 @@ public class User extends Timestamped {
         this.status = StatusEnum.DELETED;
         this.setDeletedAt(LocalDateTime.now()); // Set the deletedAt timestamp when soft deleting
     }
-
+    public void setStatus(String status){
+        this.status = StatusEnum.valueOf(status);
+    }
     public void updateToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
