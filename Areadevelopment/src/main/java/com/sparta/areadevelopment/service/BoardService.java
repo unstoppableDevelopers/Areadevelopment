@@ -2,15 +2,20 @@ package com.sparta.areadevelopment.service;
 
 import com.sparta.areadevelopment.dto.BoardRequestDto;
 import com.sparta.areadevelopment.dto.BoardResponseDto;
+import com.sparta.areadevelopment.dto.CommentResponseDto;
 import com.sparta.areadevelopment.entity.Board;
+import com.sparta.areadevelopment.entity.Comment;
 import com.sparta.areadevelopment.entity.User;
 import com.sparta.areadevelopment.repository.BoardRepository;
+import com.sparta.areadevelopment.repository.CommentRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +33,7 @@ public class BoardService {
      * 관계로 맺어줬습니다.
      */
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
         Board board = boardRepository.save(new Board(user, requestDto));
@@ -142,6 +148,15 @@ public class BoardService {
         if (!Objects.equals(board.getUser().getId(), user.getId())) {
             throw new IllegalArgumentException("작성자만 삭제 가능합니다.");
         }
+
+        // 게시글 삭제 될 경우 해당 게시글에 달린 모든 댓글 삭제처리
+        List<Comment> list = new ArrayList<>();
+        list = commentRepository.findAllByBoardIdAndDeletedAtIsNull(board.getId());
+
+        for(Comment comment : list){
+            comment.delete();
+        }
+
 
         // 삭제시간 저장
         board.setDeletedAt(board.getModifiedAt());

@@ -2,6 +2,7 @@ package com.sparta.areadevelopment.repository;
 
 
 import com.sparta.areadevelopment.entity.Comment;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,4 +45,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return 댓글 하나의 정보
      */
     Optional<Comment> findByIdAndDeletedAtNull(Long commentId);
+
+    // 게시글 Id를 통해 댓글 모두 불러옴
+    List<Comment> findAllByBoardIdAndDeletedAtIsNull(Long id);
 }
