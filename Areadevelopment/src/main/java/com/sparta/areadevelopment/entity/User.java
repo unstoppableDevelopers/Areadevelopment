@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -54,7 +55,6 @@ public class User extends Timestamped {
     //토큰 폐지
     @Column(nullable = false)
     private boolean expired = false;
-
 
     public User() {
     }

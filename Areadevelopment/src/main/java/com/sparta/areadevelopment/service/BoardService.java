@@ -29,7 +29,6 @@ public class BoardService {
      * 관계로 맺어줬습니다.
      */
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
 
     public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
         Board board = boardRepository.save(new Board(user, requestDto));

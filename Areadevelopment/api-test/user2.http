@@ -136,15 +136,15 @@ GET http://localhost:8080/api/boards/1
 
 
 ### 게시글 페이지 네이션
-GET http://localhost:8080/api/boards/recently/2
+GET http://localhost:8080/api/boards/recently/1
 
 
 ### 게시글 좋아요 순서 정렬 (10개고정)
-GET http://localhost:8080/api/boards/like/2
+GET http://localhost:8080/api/boards/like/1
 
 
-### 게시글 기간별 조회(2024-06-10 ~ 2024-06-10)
-GET http://localhost:8080/api/boards/date/2?startTime=2024-06-10&endTime=2024-06-10
+### 게시글 기간별 조회(2024-06-11 ~ 2024-06-11)
+GET http://localhost:8080/api/boards/date/1?startTime=2024-06-11&endTime=2024-06-11
 
 
 ### (2번) 게시글 수정
@@ -160,7 +160,7 @@ Content-Type: application/json
 
 ### (2번) 게시글 삭제
 #게시글 고유번호 확인!
-DELETE http://localhost:8080/api/boards/2
+DELETE http://localhost:8080/api/boards/1
 Authorization:{{Access-Token}}
 
 
@@ -203,6 +203,6 @@ Authorization:{{Access-Token}}
 Content-Type: application/json
 
 {
-  "contentId": 3,
+  "contentId": 1,
   "contentType": "comment"
 }

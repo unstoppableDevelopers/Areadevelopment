@@ -43,6 +43,7 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(
             @Valid @RequestBody SignupRequestDto requestDto) {
+        userService.signUp(requestDto);
         return ResponseEntity.status(HttpStatus.OK).body("Sign up successful");
     }
 
