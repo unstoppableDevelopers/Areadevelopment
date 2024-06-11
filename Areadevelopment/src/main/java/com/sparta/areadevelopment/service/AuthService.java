@@ -140,6 +140,7 @@ public class AuthService implements LogoutHandler {
         if (!magickey.equals(insertKey)){
             return ResponseEntity.status(403).body("잘못된 키 입력입니다");
         }
+        userRepository.findByEmail(email).get().setStatus(StatusEnum.Verifi.toString());
         return ResponseEntity.status(202).body("인증 완료");
     }
 }
