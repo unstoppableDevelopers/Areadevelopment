@@ -22,10 +22,6 @@ public class CommentResponseDto {
      */
     private Long boardId;
 
-    /**
-     * 유저의 고유번호입니다.
-     */
-    private Long userId;
 
     /**
      * 댓글의 내용입니다.
@@ -60,7 +56,6 @@ public class CommentResponseDto {
     public CommentResponseDto(Comment comment) {
         this.id = comment.getId();
         this.boardId = comment.getBoard().getId();
-        this.userId = comment.getUser().getId();
         this.content = comment.getContent();
         this.likeCount = comment.getLikeCount();
         this.deleteAt = comment.getDeletedAt();

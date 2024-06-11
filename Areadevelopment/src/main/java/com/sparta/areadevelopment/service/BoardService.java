@@ -29,7 +29,6 @@ public class BoardService {
      */
     private final BoardRepository boardRepository;
 
-
     public BoardResponseDto createBoard(User user, BoardRequestDto requestDto) {
         Board board = boardRepository.save(new Board(user, requestDto));
         return new BoardResponseDto(board);
