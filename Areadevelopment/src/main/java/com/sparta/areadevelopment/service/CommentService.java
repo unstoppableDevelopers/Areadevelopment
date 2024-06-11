@@ -45,6 +45,7 @@ public class CommentService {
      * @return 댓글의 상세정보 모음
      */
     public List<CommentResponseDto> getAllComments(Long boardId) {
+        Board board = getActiveBoardById(boardId);
         return commentRepository.findByDeletedAtNullAndBoardIdOrderByCreatedAtDesc(boardId)
                 .map(Collection::stream).orElseGet(Stream::empty).map(CommentResponseDto::new)
                 .toList();

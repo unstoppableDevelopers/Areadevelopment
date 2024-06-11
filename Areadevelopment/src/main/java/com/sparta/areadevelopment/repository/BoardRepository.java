@@ -26,7 +26,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findAllByDeletedAtIsNullOrderByLikeCountDesc(Pageable pageable);
 
     // 기간별 Paging
-    Page<Board> findAllByDeletedAtIsNullAndCreatedAtBetweenOrderByCreatedAtDesc(LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
+    Page<Board> findAllByDeletedAtIsNullAndCreatedAtBetweenOrderByCreatedAtDesc(
+            LocalDateTime startDateTime, LocalDateTime endDateTime, Pageable pageable);
+
     /**
      * 좋아요 내역이 저장되었을때 게시판 좋아요 필드값을 증가시키는 쿼리문입니다.
      *
