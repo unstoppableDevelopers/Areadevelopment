@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,13 +56,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-
-    // 게시글 없으면 status 200 ok
-    @ExceptionHandler(ServiceNotFoundException.class)
-    public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
-        return ResponseEntity.ok().body(e.getMessage());
     }
 
     // 잘못된 URL 입력에 의한 처리

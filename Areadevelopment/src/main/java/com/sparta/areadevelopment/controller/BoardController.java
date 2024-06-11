@@ -7,8 +7,7 @@ import com.sparta.areadevelopment.service.BoardService;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import javax.management.ServiceNotFoundException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -53,20 +52,16 @@ public class BoardController {
 
     /**
      * 뉴스피드 내용 불러오기
-     *
-     * @return
-     * @throws ServiceNotFoundException
      */
     @GetMapping("/boards")
-    public List<BoardResponseDto> findAll() throws ServiceNotFoundException {
+    public Optional<Object> findAll() {
         return boardService.findAll();
     }
 
 
     // 10개씩 페이지네이션하여, 각 페이지 당 뉴스피드 데이터가 10개씩 최신순으로 나오게 합니다.
     @GetMapping("/boards/recently/{page}")
-    public List<BoardResponseDto> findAllRecentlyPagination(@PathVariable int page)
-            throws ServiceNotFoundException {
+    public Optional<Object> findAllRecentlyPagination(@PathVariable int page) {
 
         // ex) 1페이지 조회시 -> index는 0으로 들어가므로 -1을 해줌
         return boardService.findAllRecentlyPagination(page - 1);
@@ -74,8 +69,7 @@ public class BoardController {
 
     // 좋아요 개수가 많은 순서대로 정렬 (페이지 당 뉴스피드 데이터 = 10개 고정)
     @GetMapping("/boards/like/{page}")
-    public List<BoardResponseDto> findAllLikesPagination(@PathVariable int page)
-            throws ServiceNotFoundException {
+    public Optional<Object> findAllLikesPagination(@PathVariable int page) {
 
         return boardService.findAllLikesPagination(page - 1);
     }
@@ -84,9 +78,10 @@ public class BoardController {
      * 기간별 조회 ex ) String startTime = 2024-05-07 이런식으로 넣어서 테스트 합니다.
      */
     @GetMapping("/boards/date/{page}")
-    public List<BoardResponseDto> findAllDatePagination(@PathVariable int page,
+    public Optional<Object> findAllDatePagination(
+            @PathVariable int page,
             @RequestParam String startTime,
-            @RequestParam String endTime) throws ServiceNotFoundException {
+            @RequestParam String endTime) {
 
         // LocalDate.parse를 사용하여 문자열을 LocalDate로 파싱
         LocalDate startDate = LocalDate.parse(startTime);
