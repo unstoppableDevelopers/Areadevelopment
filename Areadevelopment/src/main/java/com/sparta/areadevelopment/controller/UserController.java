@@ -1,6 +1,5 @@
 package com.sparta.areadevelopment.controller;
 
-import com.sparta.areadevelopment.CommonResponse;
 import com.sparta.areadevelopment.dto.PasswordChangeRequestDto;
 import com.sparta.areadevelopment.dto.SignOutRequestDto;
 import com.sparta.areadevelopment.dto.SignupRequestDto;
