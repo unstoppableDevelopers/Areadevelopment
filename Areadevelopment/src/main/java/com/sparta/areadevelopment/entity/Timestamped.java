@@ -22,14 +22,14 @@ public abstract class Timestamped {
     // 컬럼이 생성됩니다.
     @CreatedDate
     // 해당 updatable option은 생성 초기에만 시간을 저장하고 변경이 되었을 때 시간을 바꾸지 않기 위해서 입니다.
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
 
     // 마지막 변경 시간을 저장합니다.
     @LastModifiedDate
-    @Column
+    @Column(nullable = false)
     // 자바의 데이트 타입을 매핑할 때 사용합니다.-> Date, Calendar, TIMESTAMP type 이 있습니다.
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;

@@ -23,9 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/boards")
 public class CommentController {
+
     /**
-     *  DTO의 생성자 매서드
-     *
+     * DTO의 생성자 매서드
      */
     private final CommentService commentService;
 
@@ -54,7 +54,6 @@ public class CommentController {
                 requestDto));
     }
 
-
     /**
      * 게시글 하나에 종속된 모든 댓글을 조회하고 댓글이 없다면 댓글 작성 문구를 보여줍니다.
      *
@@ -82,10 +81,11 @@ public class CommentController {
     @PutMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<CommentResponseDto> updateComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto) {
+            @PathVariable Long commentId, @RequestBody CommentRequestDto requestDto,
+            @PathVariable Long boardId) {
         return ResponseEntity.ok()
                 .body(commentService.updateComment(userDetails.getUser().getId(), commentId,
-                        requestDto));
+                        requestDto, boardId));
     }
 
     /**
@@ -97,8 +97,9 @@ public class CommentController {
      */
     @DeleteMapping("/{boardId}/comments/{commentId}")
     public ResponseEntity<String> deleteComment(
-            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId) {
+            @AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable Long commentId,
+            @PathVariable Long boardId) {
         return ResponseEntity.ok(
-                commentService.deleteComment(userDetails.getUser().getId(), commentId));
+                commentService.deleteComment(userDetails.getUser().getId(), commentId, boardId));
     }
 }

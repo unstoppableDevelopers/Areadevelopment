@@ -56,9 +56,13 @@ public class AuthService implements LogoutHandler {
             throw new UsernameNotFoundException(username);
         }
         Optional<User> user = userRepository.findUserByUsernameAndStatus(username, StatusEnum.ACTIVE);
+
         bCryptPasswordEncoder.matches(password, user.get().getPassword());
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 username,password);
+        // false가 활성화임
+        user.get().setExpired(false);
+
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -66,7 +70,7 @@ public class AuthService implements LogoutHandler {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         user.get().updateToken(tokenDto.getRefreshToken());
-        user.get().setExpired(false);
+
         return tokenDto;
     }
 

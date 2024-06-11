@@ -56,11 +56,13 @@ public class CommentService {
      * @param userId     유저 고유번호
      * @param commentId  댓글 고유번호
      * @param requestDto 사용자가 수정을 요청한 내용
+     * @param boardId    게시글 고유번호
      * @return 댓글 상세 정보
      */
     @Transactional
     public CommentResponseDto updateComment(Long userId, Long commentId,
-            CommentRequestDto requestDto) {
+            CommentRequestDto requestDto, Long boardId) {
+        Board board = getActiveBoardById(boardId);
         Comment comment = getActiveCommentById(commentId);
 
         if (!comment.isCommentAuthor(userId)) {
@@ -75,10 +77,12 @@ public class CommentService {
      *
      * @param userId    사용자 고유번호
      * @param commentId 댓글 고유번호
+     * @param boardId
      * @return 댓글 삭제 성공 문장
      */
     @Transactional
-    public String deleteComment(Long userId, Long commentId) {
+    public String deleteComment(Long userId, Long commentId, Long boardId) {
+        Board board = getActiveBoardById(boardId);
         Comment comment = getActiveCommentById(commentId);
 
         if (!comment.isCommentAuthor(userId)) {

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.management.ServiceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 
-// AOP
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -60,13 +58,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-
-    // 게시글 없으면 status 200 ok
-    @ExceptionHandler(ServiceNotFoundException.class)
-    public ResponseEntity<Object> handleServiceNotFoundException(ServiceNotFoundException e) {
-        return ResponseEntity.ok().body(e.getMessage());
-    }
-
     // 잘못된 URL 입력에 의한 처리
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex) {
@@ -91,7 +82,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleNullPointerException(NullPointerException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-    
+
     // 데이터베이스 오류 메시지를 파싱하여 좀 더 친절한 메시지를 반환
     private String parseErrorMessage(String dbErrorMessage) {
         if (dbErrorMessage.contains("duplicate key value violates unique constraint")) {
